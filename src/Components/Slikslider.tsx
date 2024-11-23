@@ -4,8 +4,8 @@ import { FaHeart } from "react-icons/fa";
 import Slider from "react-slick";
 
 const items = [
-  { id: 1, title: "$50 OFF PREMIUM BRAKE SERVICE", imageUrl: "/imgs/nature/chair.jpg" },
-  { id: 2, title: "FREE CHECK ENGINE DIAGNOSTIC SCAN CAR", imageUrl: "/imgs/nature/chair.jpg" },
+  { id: 1, title: "Finch Fox Eames Replica Nordan DSW Stylish Modern Furniture Plastic Chairs with Cushion Brown Colour", imageUrl: "/items/Chair1.jpg" },
+  { id: 2, title: "2", imageUrl: "/imgs/nature/chair.jpg" },
   { id: 3, title: "INTERNAL TRANSMISSION REPAIR: $100 OFF", imageUrl: "/imgs/nature/chair.jpg" },
   { id: 4, title: "ANNUAL TECHNICAL INSPECTION OF CARS", imageUrl: "/imgs/nature/chair.jpg" },
   { id: 5, title: "$50 OFF PREMIUM BRAKE SERVICE", imageUrl: "/imgs/nature/chair.jpg" },

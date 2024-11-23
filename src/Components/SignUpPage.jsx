@@ -18,7 +18,7 @@ const SignUpPage = () => {
     if (email && password) {
       message.success("Sign-up successful!");
       setTimeout(() => {
-        navigate("/login"); 
+        navigate("/"); 
       }, 2000); // 2-second delay
     } else {
       message.error("Please fill out all fields correctly!");
@@ -100,7 +100,7 @@ const SignUpPage = () => {
 
       <div className="login-footer">
         <p>
-          Already have an account? <a href="/login">Login</a>
+          Already have an account? <a href="/">Login</a>
         </p>
       </div>
     </div>

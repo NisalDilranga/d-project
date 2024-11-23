@@ -57,9 +57,10 @@ const SliderOne = () => {
     };
 
     return (
-        <section className="bg-accentDark2 text-white p-[120px] ">
+        <section className="bg-accentDark2 text-white px-[120px] pb-[40px] ">
             <div className="container relative">
-                <Slider {...settings} className="mt-[35px] overflow-hidden bg-cover bg-no-repeat  item-body border-t-[2px] border-[#242424] relative before:content-[''] before:absolute before:top-0 before:left-0 before:w-full   before:scale-x-0 before:origin-center before:transition-transform before:duration-200 before:ease-in hover:before:scale-x-100 pt-[25px]">
+           <div className="">
+           <Slider {...settings} className="mt-[35px] overflow-hidden bg-cover bg-no-repeat  item-body border-t-[2px] border-[#242424] relative before:content-[''] before:absolute before:top-0 before:left-0 before:w-full   before:scale-x-0 before:origin-center before:transition-transform before:duration-200 before:ease-in hover:before:scale-x-100 pt-[25px]">
                     {items.map((item) => (
                         <div key={item.id} className="px-4">
                             <div className="relative flex items-center gap-6 overflow-hidden bg-cover bg-no-repeat group">
@@ -77,6 +78,7 @@ const SliderOne = () => {
                         </div>
                     ))}
                 </Slider>
+           </div>
             </div>
         </section>
     );

@@ -8,11 +8,13 @@ import ShuffleHero from '../Components/ShuffleHero'
 import { TextParallaxContentExample } from '../Components/TextParallaxContentExample'
 import AppFooter from '../Components/AppFooter'
 import SliderOne from '../Components/SliderOne'
+import EcommerceNavbar from '../Components/EcommerceNavbar'
 
 
 const Home = () => {
   return (
     <div >
+      <EcommerceNavbar/>
         <SwipeCarousel/>
         <HeroSection/>
         <SubSection/>

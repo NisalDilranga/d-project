@@ -40,7 +40,7 @@ const EcommerceNavbar = () => {
         <div className="container mx-auto flex justify-between items-center h-full">
           {/* Logo */}
           <div className="text-xl font-bold text-blue-600">
-            <a href="/">ShopEase</a>
+            <a href="/">WOOD CRAFTS</a>
           </div>
 
           {/* Desktop Menu */}

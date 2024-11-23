@@ -2,7 +2,7 @@ import React from 'react';
 
 const SubSection = () => {
   return (
-    <section className='container pt-16'>
+    <section className=' pt-16'>
         <div className="flex  mx-16">
             <div className="w-1/3 p-4 flex flex-col justify-between items-center">
                 <img src="https://splashythemes.com/opencart/OPC02/OPC020055/catalog/view/theme/stripchairlayout2/image/themeimage/service-1.svg" alt=""  width={60} height={60}/>

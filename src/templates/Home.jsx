@@ -10,16 +10,17 @@ import AppFooter from '../Components/AppFooter'
 import SliderOne from '../Components/SliderOne'
 import EcommerceNavbar from '../Components/EcommerceNavbar'
 import FeaturedProducts from '../Components/FeaturedProducts'
+import Tabs from '../Components/Tabs'
 
 
 const Home = () => {
   return (
-    <div >
+    <div className='w-full'>
       <EcommerceNavbar/>
         <SwipeCarousel/>
         <HeroSection/>
         <SubSection/>
-         <Slikslider/>
+         <Tabs/>
          <ShuffleHero/>
          <FeaturedProducts/>
          <SliderOne/>

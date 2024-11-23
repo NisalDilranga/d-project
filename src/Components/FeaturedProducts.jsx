@@ -68,7 +68,7 @@ const FeaturedProducts = () => {
   return (
     <div className="  bg-white pt-[90px]  px-16 ">
       <div className="text-4xl text-center font-semibold pb-10">
-        <h1>Top Categories</h1>
+        <h1>Featured Products</h1>
       </div>
       <Slider {...settings} className="overflow-hidden">
         {items.map((item, index) => (

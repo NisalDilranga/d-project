@@ -11,6 +11,7 @@ import SliderOne from '../Components/SliderOne'
 import EcommerceNavbar from '../Components/EcommerceNavbar'
 import FeaturedProducts from '../Components/FeaturedProducts'
 import Tabs from '../Components/Tabs'
+import LoginPage from '../Components/LoginPage'
 
 
 const Home = () => {
@@ -25,7 +26,7 @@ const Home = () => {
          <FeaturedProducts/>
          <SliderOne/>
          <TextParallaxContentExample/>
-         <AppFooter/>
+         <AppFooter/>  
     </div>
   )
 }

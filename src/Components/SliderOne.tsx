@@ -4,14 +4,13 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 const items = [
-    { id: 1, title: '$50 OFF PREMIUM BRAKE SERVICE', imageUrl: 'https://splashythemes.com/opencart/OPC02/OPC020055/image/cache/catalog/demo/manufacturer/3-165x60.png' },
-    { id: 2, title: 'FREE CHECK ENGINE DIAGNOSTIC SCAN CAR', imageUrl: 'https://splashythemes.com/opencart/OPC02/OPC020055/image/cache/catalog/demo/manufacturer/6-165x60.png' },
-    { id: 3, title: 'INTERNAL TRANSMISSION REPAIR: $100 OFF', imageUrl: 'https://splashythemes.com/opencart/OPC02/OPC020055/image/cache/catalog/demo/manufacturer/7-165x60.png' },
-    { id: 4, title: 'ANNUAL TECHNICAL INSPECTION OF CARS', imageUrl: '/images/background/portfolio-8.jpg' },
-    { id: 5, title: '$50 OFF PREMIUM BRAKE SERVICE', imageUrl: '/images/background/portfolio-11-270x445.jpg' },
-    { id: 6, title: 'Project Title 1', imageUrl: '/images/background/portfolio-11-270x445.jpg' },
-    { id: 7, title: 'Project Title 1', imageUrl: '/images/background/portfolio-11-270x445.jpg' },
-    { id: 8, title: 'Project Title 1', imageUrl: '/images/background/portfolio-11-270x445.jpg' },
+    { id: 1, title: 'A World of Frames and Memories', imageUrl: 'https://splashythemes.com/opencart/OPC02/OPC020055/image/cache/catalog/demo/manufacturer/3-165x60.png' },
+    { id: 2, title: 'Timeless Craftsmanship and Elegance', imageUrl: 'https://splashythemes.com/opencart/OPC02/OPC020055/image/cache/catalog/demo/manufacturer/6-165x60.png' },
+    { id: 3, title: 'Redefining Comfort and Style', imageUrl: 'https://splashythemes.com/opencart/OPC02/OPC020055/image/cache/catalog/demo/manufacturer/7-165x60.png' },
+    { id: 4, title: 'Your Haven of Inspiration and Comfort', imageUrl: 'https://splashythemes.com/opencart/OPC02/OPC020055/image/cache/catalog/demo/manufacturer/5-165x60.png' },
+    { id: 5, title: 'Crafted for Your Comfort and Style', imageUrl: 'https://splashythemes.com/opencart/OPC02/OPC020055/image/cache/catalog/demo/manufacturer/4-165x60.png' },
+    { id: 6, title: 'Where Design Meets Functionality', imageUrl: 'https://splashythemes.com/opencart/OPC02/OPC020055/image/cache/catalog/demo/manufacturer/1-165x60.png' },
+    
 ];
 
 const SliderOne = () => {

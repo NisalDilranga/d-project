@@ -4,13 +4,10 @@ import aboutus_img from '../../src/assets/aboutus-img.jpg';
 
 const HeroSection= () => {
   return (
-<<<<<<< HEAD
-    <section className=' bg-[#666666] py-24 pr-5 bg-opacity-20' >
-       <div className=" flex items-center justify-between  ">
-=======
+
     <section className='bg-[#666666] py-24 bg-opacity-20'>
        <div className=" flex items-center justify-between  mx-10  ">
->>>>>>> 1d21deea4bc6c3654c02be554578eae27a776e8c
+
          <div className="w-1/2 ">
            <div className="flex flex-col space-y-10 pl-10 mr-16">
              <h1 className='text-[48px] font-bold'>welcome to store</h1>

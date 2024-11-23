@@ -7,6 +7,7 @@ import Slikslider from '../Components/Slikslider'
 import ShuffleHero from '../Components/ShuffleHero'
 import { TextParallaxContentExample } from '../Components/TextParallaxContentExample'
 import AppFooter from '../Components/AppFooter'
+import SliderOne from '../Components/SliderOne'
 
 
 const Home = () => {
@@ -17,6 +18,7 @@ const Home = () => {
         <SubSection/>
          <Slikslider/>
          <ShuffleHero/>
+         <SliderOne/>
          <TextParallaxContentExample/>
          <AppFooter/>
     </div>

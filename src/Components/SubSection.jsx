@@ -12,15 +12,11 @@ const SubSection = () => {
                 </div>
             </div>
             <div className="w-1/3 p-4 flex flex-col justify-between items-center">
-<<<<<<< HEAD
+
             <img src="https://splashythemes.com/opencart/OPC02/OPC020055/catalog/view/theme/stripchairlayout2/image/themeimage/service-2.svg" alt=""  width={60} height={60}/>
-                <div className="text-center">
-                    <h1 className='text-center'>Special Gift for you</h1>
-=======
-            <img src="https://splashythemes.com/opencart/OPC02/OPC020055/catalog/view/theme/stripchairlayout2/image/themeimage/service-1.svg" alt=""  width={60} height={60}/>
                 <div className="text-center ">
                     <h1 className='text-center font-bold mb-1'>Special Gift for you</h1>
->>>>>>> 9ea3e4d456abb2f78e02d9109d7efa2dc021c845
+
                     <p>Best weekly special gifts and vouchers for our prime members on this season.</p>
                 </div></div>
             <div className="w-1/3 p-4 flex flex-col justify-between items-center">

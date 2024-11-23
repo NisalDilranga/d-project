@@ -9,6 +9,7 @@ import { TextParallaxContentExample } from '../Components/TextParallaxContentExa
 import AppFooter from '../Components/AppFooter'
 import SliderOne from '../Components/SliderOne'
 import EcommerceNavbar from '../Components/EcommerceNavbar'
+import FeaturedProducts from '../Components/FeaturedProducts'
 
 
 const Home = () => {
@@ -20,6 +21,7 @@ const Home = () => {
         <SubSection/>
          <Slikslider/>
          <ShuffleHero/>
+         <FeaturedProducts/>
          <SliderOne/>
          <TextParallaxContentExample/>
          <AppFooter/>

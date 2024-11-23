@@ -2,6 +2,8 @@ import React from "react";
 import { FaCartArrowDown } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa";
 import Slider from "react-slick";
+import { FaArrowAltCircleLeft ,FaArrowAltCircleRight } from "react-icons/fa";
+
 
 const items = [
   { id: 1, title: "$50 OFF PREMIUM BRAKE SERVICE", imageUrl: "/imgs/nature/chair.jpg" },
@@ -20,7 +22,7 @@ const NextArrow = ({ onClick }: { onClick?: () => void }) => (
     className="absolute right-2 top-5 bg-gray-600 p-2 rounded-full shadow-md z-10 hover:bg-white transform -translate-y-1/2"
     onClick={onClick}
   >
-    ➡️
+   <FaArrowAltCircleRight />
   </button>
 );
 
@@ -30,7 +32,7 @@ const PrevArrow = ({ onClick }: { onClick?: () => void }) => (
     className="absolute left-2 top-5 bg-gray-600 p-2 rounded-full shadow-md z-10 hover:bg-white transform -translate-y-1/2"
     onClick={onClick}
   >
-    ⬅️
+    <FaArrowAltCircleLeft />
   </button>
 );
 

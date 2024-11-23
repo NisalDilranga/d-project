@@ -4,14 +4,14 @@ import Slikslider from './Slikslider';
 import { h1 } from 'framer-motion/client';
 
 const Tabs = () => {
-    const [activeTab, setActiveTab] = useState('Pending Bookings');
+    const [activeTab, setActiveTab] = useState('Office Furniture');
     const renderContent = () => {
         switch (activeTab) {
-          case 'Pending Bookings':
+          case 'Office Furniture':
             return <Slikslider />;
-          case 'Confirmed Bookings':
+          case 'Outdoor Furniture':
             return <Slikslider />;
-          case 'Canceled Bookings':
+          case 'Bedroom Furniture':
             return <p>yyyyyyyy</p> ;
           default:
             return null;
@@ -29,7 +29,7 @@ const Tabs = () => {
           key={tab}
           className={`text-sm border-[1px] border-[#FFFFFF] w-[206px] h-[41px] text-center ${
             activeTab === tab
-              ? 'text-[22px] font-[600] border bg-[#FFFFFF] text-[#222222]'
+              ? 'text-[18px] font-[600] border bg-[#FFFFFF] text-[#222222]'
               : 'text-[#616161] hover:text-orange-500 bg-transparent text-[14px] font-[400]'
           } ${
             index === 0

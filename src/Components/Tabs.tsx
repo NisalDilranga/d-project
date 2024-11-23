@@ -24,7 +24,7 @@ const Tabs = () => {
       </div>
     {/* Tabs Header */}
     <div className="flex rounded-t-[20px] overflow-hidden justify-center">
-      {['Pending Bookings', 'Confirmed Bookings', 'Canceled Bookings'].map((tab, index) => (
+      {['Office Furniture', 'Outdoor Furniture', 'Bedroom Furniture'].map((tab, index) => (
         <button
           key={tab}
           className={`text-sm border-[1px] border-[#FFFFFF] w-[206px] h-[41px] text-center ${

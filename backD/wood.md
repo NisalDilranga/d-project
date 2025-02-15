@@ -5,7 +5,7 @@
 ### 1. Create Wood Type (Admin)
 ```javascript
 // Request
-POST /api/woods
+POST /api/woodss
 Headers:
 {
   "Authorization": "Bearer jwt.token.here"

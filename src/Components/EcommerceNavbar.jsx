@@ -1,5 +1,6 @@
 import React from "react";
 import { Layout, Menu, Input, Badge, Button, Space, Drawer } from "antd";
+import { MdOutlineLogout } from "react-icons/md";
 import {
   ShoppingCartOutlined,
   UserOutlined,
@@ -7,12 +8,25 @@ import {
   SearchOutlined,
   MenuOutlined,
 } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie"; // For managing cookies
 
 const { Header } = Layout;
 const { SubMenu } = Menu;
 
 const EcommerceNavbar = () => {
   const [drawerVisible, setDrawerVisible] = React.useState(false);
+  const navigate = useNavigate();
+
+  // Check if the user is logged in
+  const isLoggedIn = !!Cookies.get("accessToken"); // Or use localStorage.getItem("accessToken")
+
+  // Handle logout
+  const handleLogout = () => {
+    Cookies.remove("accessToken"); // Remove the access token from cookies
+    // localStorage.removeItem("accessToken"); // If using localStorage
+    navigate("/login"); // Redirect to the login page
+  };
 
   const showDrawer = () => setDrawerVisible(true);
   const closeDrawer = () => setDrawerVisible(false);
@@ -88,15 +102,35 @@ const EcommerceNavbar = () => {
             </a>
           </Badge>
 
-          {/* User */}
-          <Space>
-            <Button type="text" icon={<UserOutlined />}>
-              <a href="/login">Sign In</a>
-            </Button>
-            <Button type="primary">
-              <a href="/signup">Sign Up</a>
-            </Button>
-          </Space>
+          {/* User Profile or Login/Signup */}
+          {isLoggedIn ? (
+            <Space>
+              {/* User Profile */}
+              <Button type="text" icon={<UserOutlined />}>
+                <a href="/profile">Profile</a>
+              </Button>
+              {/* Logout Button */}
+              <Button
+                type="primary"
+                danger
+                icon={<MdOutlineLogout />}
+                onClick={handleLogout}
+              >
+                Logout
+              </Button>
+            </Space>
+          ) : (
+            <Space>
+              {/* Sign In */}
+              <Button type="text" icon={<UserOutlined />}>
+                <a href="/login">Sign In</a>
+              </Button>
+              {/* Sign Up */}
+              <Button type="primary">
+                <a href="/signup">Sign Up</a>
+              </Button>
+            </Space>
+          )}
         </div>
       </div>
 

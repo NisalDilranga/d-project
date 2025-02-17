@@ -1,20 +1,40 @@
-import React from "react";
+
 import { Form, Input, Button, Checkbox, message } from "antd";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import Cookies from "js-cookie";
 
 const LoginPage = () => {
   const navigate = useNavigate();
 
-  const handleLogin = (values) => {
-    const { email, password } = values;
-  
-    if (email === "admin@gmail.com" && password === "123456") {
-      message.success("Login successful!");
-      setTimeout(() => {
-        navigate("/home"); 
-      }, 2000); 
-    } else {
-      message.error("Invalid username or password!");
+  const handleLogin = async (values) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/auth/login",
+        {
+          email: values.email,
+          password: values.password,
+        }
+      );
+
+      if (response.data.success) {
+        message.success("Login successful!");
+        const accessToken = response.data.token;
+        Cookies.set("accessToken", accessToken, { expires: 1 });
+        setTimeout(() => {
+          const userRole = response.data.user.role;
+          if (userRole === "admin") {
+            navigate("/dashboard");
+          } else {
+            navigate("/home");
+          }
+        }, 2000);
+      } else {
+        message.error(response.data.message || "Invalid username or password!");
+      }
+    } catch (error) {
+      message.error("An error occurred during login. Please try again.");
+      console.error("Login error:", error);
     }
   };
 
@@ -67,12 +87,7 @@ const LoginPage = () => {
           </Form.Item>
 
           <Form.Item>
-            <Button
-              type="primary"
-              htmlType="submit"
-              block
-              className="mb-4"
-            >
+            <Button type="primary" htmlType="submit" block className="mb-4">
               Log In
             </Button>
           </Form.Item>
@@ -84,10 +99,7 @@ const LoginPage = () => {
           >
             Forgot Password?
           </Button>
-          <Button
-            type="link"
-            onClick={() => navigate("/signup")} 
-          >
+          <Button type="link" onClick={() => navigate("/signup")}>
             Sign Up
           </Button>
         </div>

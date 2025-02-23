@@ -114,6 +114,23 @@ const FurnitureTab = () => {
 
   const columns = [
     {
+      title: "Image",
+      dataIndex: "imageUrl",
+      key: "image",
+      render: (imageUrl) => (
+        <img
+          src={imageUrl}
+          alt="Furniture"
+          style={{
+            width: "60px",
+            height: "60px",
+            objectFit: "cover",
+            borderRadius: "4px",
+          }}
+        />
+      ),
+    },
+    {
       title: "Name",
       dataIndex: "name",
       key: "name",
@@ -165,6 +182,16 @@ const FurnitureTab = () => {
       ellipsis: true,
     },
     {
+      title: "Image URL",
+      dataIndex: "imageUrl",
+      key: "imageUrl",
+      render: (url) => (
+        <a href={url} target="_blank" rel="noopener noreferrer">
+          View Image
+        </a>
+      ),
+    },
+    {
       title: "Actions",
       key: "actions",
       render: (_, record) => (
@@ -189,6 +216,7 @@ const FurnitureTab = () => {
       category: record.category._id,
       basePrice: record.basePrice,
       description: record.description,
+      imageUrl: record.imageUrl,
       woodTypes: record.woodTypes
         .filter((wt) => wt.woodType) // Filter out any invalid wood types
         .map((wt) => wt.woodType._id),
@@ -262,6 +290,14 @@ const FurnitureTab = () => {
             rules={[{ required: true }]}
           >
             <Input.TextArea />
+          </Form.Item>
+
+          <Form.Item
+            name="imageUrl"
+            label="Image URL"
+            rules={[{ required: true, message: "Please input the image URL!" }]}
+          >
+            <Input placeholder="https://example.com/image.jpg" />
           </Form.Item>
 
           <Form.Item

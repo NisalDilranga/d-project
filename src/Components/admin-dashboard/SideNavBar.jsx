@@ -10,6 +10,7 @@ import {
   FiShoppingCart,
   FiTag,
   FiUsers,
+  FiShoppingBag, // Add this import at the top with other icons
 } from "react-icons/fi";
 import { motion } from "framer-motion";
 
@@ -67,6 +68,14 @@ const Sidebar = () => {
           setSelected={setSelected}
           open={open}
           path="/dashboard/products"
+        />
+        <Option
+          Icon={FiShoppingBag}
+          title="Orders"
+          selected={selected}
+          setSelected={setSelected}
+          open={open}
+          path="/dashboard/orders"
         />
         <Option
           Icon={FiTag}

@@ -17,6 +17,7 @@ import Cookies from "js-cookie"; // For checking authentication
 import DashboardLayout from "./layouts/DashboardLayout";
 import UsersManagement from "./Components/admin-dashboard/pages/UsersManagement";
 import ProductsManagement from "./Components/admin-dashboard/pages/ProductsManagement";
+import OrdersManagement from "./Components/admin-dashboard/pages/OrdersManagement"; // Add this import at the top
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -80,6 +81,7 @@ function App() {
               <Route path="users" element={<UsersManagement />} />
               <Route path="products" element={<ProductsManagement />} />
               <Route path="sales" element={<Cart />} />
+              <Route path="orders" element={<OrdersManagement />} />
             </Route>
 
             {/* Fallback Route (Redirect to Login if no route matches) */}

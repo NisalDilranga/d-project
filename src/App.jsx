@@ -16,6 +16,7 @@ import { CartProvider } from "react-use-cart";
 import Cookies from "js-cookie"; // For checking authentication
 import DashboardLayout from "./layouts/DashboardLayout";
 import UsersManagement from "./Components/admin-dashboard/pages/UsersManagement";
+import ProductsManagement from "./Components/admin-dashboard/pages/ProductsManagement";
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -77,7 +78,7 @@ function App() {
             >
               <Route index element={<UsersManagement />} />
               <Route path="users" element={<UsersManagement />} />
-              <Route path="products" element={<Electronics />} />
+              <Route path="products" element={<ProductsManagement />} />
               <Route path="sales" element={<Cart />} />
             </Route>
 

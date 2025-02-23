@@ -15,6 +15,7 @@ import {
 import { CartProvider } from "react-use-cart";
 import Cookies from "js-cookie"; // For checking authentication
 import DashboardLayout from "./layouts/DashboardLayout";
+import UsersManagement from "./Components/admin-dashboard/pages/UsersManagement";
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -39,7 +40,6 @@ function App() {
             <Route path="/" element={<LoginPage />} />
             <Route path="/signup" element={<SignUpPage />} />
             <Route path="/home" element={<Home />} />
-            <Route path="/sample" element={<SideNavBar />} />
 
             {/* Protected Routes */}
             {/* <Route
@@ -75,9 +75,10 @@ function App() {
                 </ProtectedRoute>
               }
             >
-              <Route index element={<Home />} />
-              <Route path="electronics" element={<Electronics />} />
-              <Route path="cart" element={<Cart />} />
+              <Route index element={<UsersManagement />} />
+              <Route path="users" element={<UsersManagement />} />
+              <Route path="products" element={<Electronics />} />
+              <Route path="sales" element={<Cart />} />
             </Route>
 
             {/* Fallback Route (Redirect to Login if no route matches) */}

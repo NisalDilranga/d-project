@@ -47,14 +47,20 @@ const EcommerceNavbar = () => {
           style={{ flex: 1, justifyContent: "center" }}
         >
           <SubMenu key="categories" title="Categories">
-            <Menu.Item key="electronics">
-              <a href="/categories/electronics">Electronics</a>
+            <Menu.Item key="living-room">
+              <a href="/categories/living-room">Living Room</a>
             </Menu.Item>
-            <Menu.Item key="fashion">
-              <a href="/categories/fashion">Fashion</a>
+            <Menu.Item key="dining-kitchen">
+              <a href="/categories/dining-kitchen">Dining & Kitchen</a>
             </Menu.Item>
-            <Menu.Item key="home-appliances">
-              <a href="/categories/home-appliances">Home Appliances</a>
+            <Menu.Item key="bedroom">
+              <a href="/categories/bedroom-furniture">Bedroom Furniture</a>
+            </Menu.Item>
+            <Menu.Item key="office-study">
+              <a href="/categories/office-study">Office & Study</a>
+            </Menu.Item>
+            <Menu.Item key="outdoor-patio">
+              <a href="/categories/outdoor-patio">Outdoor & Patio</a>
             </Menu.Item>
           </SubMenu>
           <Menu.Item key="deals">
@@ -144,14 +150,20 @@ const EcommerceNavbar = () => {
       >
         <Menu mode="vertical" theme="light">
           <SubMenu key="categories" title="Categories">
-            <Menu.Item key="electronics">
-              <a href="/categories/electronics">Electronics</a>
+            <Menu.Item key="living-room">
+              <a href="/categories/living-room">Living Room</a>
             </Menu.Item>
-            <Menu.Item key="fashion">
-              <a href="/categories/fashion">Fashion</a>
+            <Menu.Item key="dining-kitchen">
+              <a href="/categories/dining-kitchen">Dining & Kitchen</a>
             </Menu.Item>
-            <Menu.Item key="home-appliances">
-              <a href="/categories/home-appliances">Home Appliances</a>
+            <Menu.Item key="bedroom">
+              <a href="/categories/bedroom-furniture">Bedroom Furniture</a>
+            </Menu.Item>
+            <Menu.Item key="office-study">
+              <a href="/categories/office-study">Office & Study</a>
+            </Menu.Item>
+            <Menu.Item key="outdoor-patio">
+              <a href="/categories/outdoor-patio">Outdoor & Patio</a>
             </Menu.Item>
           </SubMenu>
           <Menu.Item key="deals">

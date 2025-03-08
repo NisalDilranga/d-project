@@ -1,7 +1,28 @@
-@import 'slick-carousel/slick/slick.css';
-@import 'slick-carousel/slick/slick-theme.css';
+@import "slick-carousel/slick/slick.css";
+@import "slick-carousel/slick/slick-theme.css";
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Removed product-card hover effect completely */
+
+/* Keep other hover effects */
+.wood-tag:hover {
+  background-color: #8b5a2b !important;
+  color: white !important;
+}
+
+.cart-button:hover {
+  background-color: #0958d9 !important;
+  border-color: #0958d9 !important;
+}
+
+.favorite-button:hover {
+  transform: scale(1.05);
+}
+
+/* Wood types tooltip custom styling */
+.ant-tooltip-inner {
+  padding: 0 !important;
+}

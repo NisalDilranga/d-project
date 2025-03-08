@@ -176,6 +176,16 @@ const FurnitureTab = () => {
       ),
     },
     {
+      title: "Stock",
+      dataIndex: "stock",
+      key: "stock",
+      render: (stock) => (
+        <span className={`font-medium ${stock <= 5 ? "text-red-500" : ""}`}>
+          {stock || 0}
+        </span>
+      ),
+    },
+    {
       title: "Description",
       dataIndex: "description",
       key: "description",
@@ -215,6 +225,7 @@ const FurnitureTab = () => {
       name: record.name,
       category: record.category._id,
       basePrice: record.basePrice,
+      stock: record.stock || 0,
       description: record.description,
       imageUrl: record.imageUrl,
       woodTypes: record.woodTypes
@@ -282,6 +293,17 @@ const FurnitureTab = () => {
             rules={[{ required: true }]}
           >
             <Input type="number" prefix="$" />
+          </Form.Item>
+
+          <Form.Item
+            name="stock"
+            label="Stock Quantity"
+            rules={[
+              { required: true, message: "Please input stock quantity!" },
+            ]}
+            initialValue={0}
+          >
+            <Input type="number" min={0} />
           </Form.Item>
 
           <Form.Item

@@ -1,10 +1,16 @@
 import "./App.css";
 import Cart from "./Components/cart/Cart";
 import Electronics from "./Components/categories/Electronics";
+import LivingRoom from "./Components/categories/LivingRoom";
+import DiningKitchen from "./Components/categories/DiningKitchen";
+import BedroomFurniture from "./Components/categories/BedroomFurniture";
+import OfficeStudy from "./Components/categories/OfficeStudy";
+import OutdoorPatio from "./Components/categories/OutdoorPatio";
 import LoginPage from "./Components/LoginPage";
 import SignUpPage from "./Components/SignUpPage";
 import Home from "./templates/Home";
 import { SideNavBar } from "./Components/admin-dashboard/SideNavBar";
+import ProductDetails from "./pages/ProductDetails";
 
 import {
   BrowserRouter as Router,
@@ -60,6 +66,49 @@ function App() {
                 </ProtectedRoute>
               }
             />
+
+            {/* Furniture Category Routes */}
+            <Route
+              path="/categories/living-room"
+              element={
+                <ProtectedRoute>
+                  <LivingRoom />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/categories/dining-kitchen"
+              element={
+                <ProtectedRoute>
+                  <DiningKitchen />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/categories/bedroom-furniture"
+              element={
+                <ProtectedRoute>
+                  <BedroomFurniture />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/categories/office-study"
+              element={
+                <ProtectedRoute>
+                  <OfficeStudy />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/categories/outdoor-patio"
+              element={
+                <ProtectedRoute>
+                  <OutdoorPatio />
+                </ProtectedRoute>
+              }
+            />
+
             <Route
               path="/cart"
               element={
@@ -83,6 +132,16 @@ function App() {
               <Route path="sales" element={<Cart />} />
               <Route path="orders" element={<OrdersManagement />} />
             </Route>
+
+            {/* Product Details Route */}
+            <Route
+              path="/product/:id"
+              element={
+                <ProtectedRoute>
+                  <ProductDetails />
+                </ProtectedRoute>
+              }
+            />
 
             {/* Fallback Route (Redirect to Login if no route matches) */}
             <Route path="*" element={<Navigate to="/" replace />} />

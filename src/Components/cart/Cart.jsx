@@ -19,7 +19,7 @@ import {
   RightOutlined,
 } from "@ant-design/icons";
 import EcommerceNavbar from "../EcommerceNavbar";
-import {loadStripe} from '@stripe/stripe-js'
+import { loadStripe } from "@stripe/stripe-js";
 
 const { Title, Text } = Typography;
 
@@ -47,8 +47,6 @@ export const addToCart = async (furnitureId, quantity, woodTypeId) => {
   }
 };
 
-
-
 // Create a custom hook to fetch and manage cart data
 export const useCartData = () => {
   const [cartData, setCartData] = useState(null);
@@ -56,9 +54,6 @@ export const useCartData = () => {
   const [cartCount, setCartCount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-
-
-
 
   const fetchCart = async () => {
     setIsLoading(true);
@@ -116,37 +111,94 @@ const Cart = () => {
     try {
       // Show loading message
       message.loading("Preparing checkout...", 0);
-      
-      const stripe = await loadStripe("pk_test_51PGYes09azGpyfrWuQuV4NzNm3fRGp7IxuO3lPeBis6uztinsHhEkBWh8LA6L0oip2r9SF0VDVpdDkEAAIXll9S000KWevjqfD");
+
+      // Format cart items for order creation
+      const orderItems = cartItems.map((item) => ({
+        furniture: item.furniture?._id || item.furniture,
+        woodType: item.woodType?._id || item.woodType,
+        quantity: item.quantity,
+        price: item.price,
+      }));
+
+      // Create order payload
+      const orderPayload = {
+        items: orderItems,
+        imageUrl: cartItems[0]?.furniture?.imageUrl || "",
+        description: "Order from cart checkout",
+      };
+
+      // Send order to backend
+      const orderResponse = await axios.post(
+        "http://localhost:3000/api/orders",
+        orderPayload,
+        getAuthHeader()
+      );
+
+      console.log("Order created:", orderResponse.data);
+
+      // Update furniture stock quantities after successful order
+      for (const item of cartItems) {
+        const furnitureId = item.furniture?._id || item.furniture;
+        const quantity = item.quantity;
+
+        try {
+          await axios.put(
+            `http://localhost:3000/api/furniture/${furnitureId}/reduce-stock`,
+            {
+              id: furnitureId, // Explicitly include the ID in the request body
+              quantity,
+            },
+            getAuthHeader()
+          );
+          console.log(`Stock updated for furniture ${furnitureId}`);
+        } catch (stockError) {
+          console.error(
+            `Failed to update stock for furniture ${furnitureId}:`,
+            stockError
+          );
+          // Continue with checkout even if stock update fails
+        }
+      }
+
+     // Clear the cart after successful order creation - Fix the parameter ordering
+      await axios.delete(
+        "http://localhost:3000/api/cart/clear",
+        getAuthHeader() // Configuration object should be the second parameter for axios.delete
+      );
+
+      console.log("Cart cleared successfully");
+
+      const stripe = await loadStripe(
+        "pk_test_51PGYes09azGpyfrWuQuV4NzNm3fRGp7IxuO3lPeBis6uztinsHhEkBWh8LA6L0oip2r9SF0VDVpdDkEAAIXll9S000KWevjqfD"
+      );
 
       const body = {
         products: cartItems,
       };
-      
+
       // Send request to backend to create checkout session
       const response = await axios.post(
         "http://localhost:3000/api/checkout/create-session",
         body,
         getAuthHeader()
       );
-      
+
       message.destroy(); // Hide loading message
-      
+
       // Check if response contains sessionId
       const sessionId = response.data.id;
       if (!sessionId) {
         throw new Error("Failed to create checkout session");
       }
-      
+
       // Redirect to Stripe checkout
       const result = await stripe.redirectToCheckout({
-        sessionId: sessionId
+        sessionId: sessionId,
       });
-      
+
       if (result.error) {
         throw new Error(result.error.message);
       }
-      
     } catch (error) {
       message.destroy();
       console.error("Checkout error:", error);
@@ -332,7 +384,7 @@ const Cart = () => {
                         <div style={{ marginTop: "8px" }}>
                           {item.woodType ? (
                             <Text type="secondary">
-                              Wood type: {item.woodType}
+                              Wood type: {item.woodType.name || "Unknown"}
                             </Text>
                           ) : (
                             <Text type="secondary">Standard wood</Text>

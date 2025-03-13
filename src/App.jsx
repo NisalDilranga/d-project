@@ -11,6 +11,7 @@ import SignUpPage from "./Components/SignUpPage";
 import Home from "./templates/Home";
 import { SideNavBar } from "./Components/admin-dashboard/SideNavBar";
 import ProductDetails from "./pages/ProductDetails";
+import OrderHistory from "./Components/orders/OrderHistory";
 
 import {
   BrowserRouter as Router,
@@ -139,6 +140,16 @@ function App() {
               element={
                 <ProtectedRoute>
                   <ProductDetails />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Order History Route */}
+            <Route
+              path="/orders"
+              element={
+                <ProtectedRoute>
+                  <OrderHistory />
                 </ProtectedRoute>
               }
             />

@@ -1,4 +1,3 @@
-
 import { Form, Input, Button, Checkbox, message } from "antd";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -21,6 +20,10 @@ const LoginPage = () => {
         message.success("Login successful!");
         const accessToken = response.data.token;
         Cookies.set("accessToken", accessToken, { expires: 1 });
+
+        // Save user data to cookies
+        Cookies.set("userId", response.data.user.id, { expires: 1 });
+
         setTimeout(() => {
           const userRole = response.data.user.role;
           if (userRole === "admin") {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Layout, Menu, Input, Badge, Button, Space, Drawer } from "antd";
 import { MdOutlineLogout } from "react-icons/md";
 import {
@@ -10,6 +10,8 @@ import {
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie"; // For managing cookies
+import axios from "axios";
+import { useCartData } from "./cart/Cart"; // Import our custom hook
 
 const { Header } = Layout;
 const { SubMenu } = Menu;
@@ -17,6 +19,9 @@ const { SubMenu } = Menu;
 const EcommerceNavbar = () => {
   const [drawerVisible, setDrawerVisible] = React.useState(false);
   const navigate = useNavigate();
+
+  // Use our custom hook to get cart count
+  const { cartCount, isLoading } = useCartData();
 
   // Check if the user is logged in
   const isLoggedIn = !!Cookies.get("accessToken"); // Or use localStorage.getItem("accessToken")
@@ -101,8 +106,12 @@ const EcommerceNavbar = () => {
             </a>
           </Badge>
 
-          {/* Cart */}
-          <Badge count={5} offset={[-4, 8]}>
+          {/* Cart - Shows real count from API with loading state handling */}
+          <Badge
+            count={isLoading ? "..." : cartCount}
+            offset={[-4, 8]}
+            style={{ backgroundColor: isLoading ? "#8c8c8c" : "#1677ff" }}
+          >
             <a href="/cart" className="text-gray-600 hover:text-blue-600">
               <ShoppingCartOutlined className="text-2xl" />
             </a>

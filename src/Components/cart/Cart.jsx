@@ -1,25 +1,422 @@
-import React from "react";
-import { useCart } from "react-use-cart";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import Cookies from "js-cookie";
+import {
+  Button,
+  List,
+  Avatar,
+  Spin,
+  Typography,
+  InputNumber,
+  message,
+  Divider,
+  Empty,
+  Card,
+} from "antd";
+import {
+  DeleteOutlined,
+  ShoppingCartOutlined,
+  RightOutlined,
+} from "@ant-design/icons";
+import EcommerceNavbar from "../EcommerceNavbar";
+
+const { Title, Text } = Typography;
+
+// Helper function to get authentication headers
+const getAuthHeader = () => ({
+  headers: { Authorization: `Bearer ${Cookies.get("accessToken")}` },
+});
+
+// Function to add a product to cart that can be imported by other components
+export const addToCart = async (furnitureId, quantity, woodTypeId) => {
+  try {
+    const response = await axios.post(
+      "http://localhost:3000/api/cart/add",
+      {
+        furnitureId,
+        quantity: quantity || 1,
+        woodTypeId,
+      },
+      getAuthHeader()
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error adding item to cart:", error);
+    throw error;
+  }
+};
+
+// Create a custom hook to fetch and manage cart data
+export const useCartData = () => {
+  const [cartData, setCartData] = useState(null);
+  const [cartItems, setCartItems] = useState([]);
+  const [cartCount, setCartCount] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const fetchCart = async () => {
+    setIsLoading(true);
+    try {
+      const response = await axios.get(
+        "http://localhost:3000/api/cart/",
+        getAuthHeader()
+      );
+
+      // Store the complete response
+      setCartData(response.data);
+
+      // Extract items from the response
+      const items = response.data.items || [];
+      setCartItems(items);
+
+      // Set cart count
+      setCartCount(items.length);
+
+      setError(null);
+    } catch (err) {
+      console.error("Error fetching cart data:", err);
+      setError("Failed to load cart data");
+      setCartData(null);
+      setCartItems([]);
+      setCartCount(0);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchCart();
+  }, []);
+
+  return {
+    cartData,
+    cartItems,
+    cartCount,
+    isLoading,
+    error,
+    refreshCart: fetchCart,
+  };
+};
 
 const Cart = () => {
-  const { isEmpty, totalUniqueItems, items, updateItemQuantity, removeItem } = useCart();
+  const { cartData, cartItems, isLoading, error, refreshCart } = useCartData();
+  const [updating, setUpdating] = useState(false);
 
-  if (isEmpty) return <p>Your cart is empty</p>;
+  // Function to update cart item quantity via API - Updated with correct endpoint
+  const updateCartItem = async (itemId, newQuantity) => {
+    if (newQuantity < 1) return;
+    setUpdating(true);
+    try {
+      await axios.put(
+        `http://localhost:3000/api/cart/item/update/${itemId}`,
+        { quantity: newQuantity },
+        getAuthHeader()
+      );
+      message.success("Cart updated successfully");
+      refreshCart(); // Refresh cart data after update
+    } catch (error) {
+      console.error("Error updating cart item:", error);
+      message.error("Failed to update cart. Please try again.");
+    } finally {
+      setUpdating(false);
+    }
+  };
+
+  // Function to remove item via API - Updated with correct endpoint
+  const removeCartItem = async (itemId) => {
+    setUpdating(true);
+    try {
+      await axios.delete(
+        `http://localhost:3000/api/cart/item/${itemId}`,
+        getAuthHeader()
+      );
+      message.success("Item removed from cart");
+      refreshCart(); // Refresh cart data after removal
+    } catch (error) {
+      console.error("Error removing cart item:", error);
+      message.error("Failed to remove item. Please try again.");
+    } finally {
+      setUpdating(false);
+    }
+  };
+
+  const renderContent = () => {
+    if (isLoading || updating) {
+      return (
+        <div
+          className="cart-loading"
+          style={{ textAlign: "center", padding: "100px 0" }}
+        >
+          <Spin tip="Loading cart..." size="large" />
+          <p style={{ marginTop: 20, color: "#666" }}>
+            Please wait while we load your cart...
+          </p>
+        </div>
+      );
+    }
+
+    if (error) {
+      return (
+        <Card
+          className="error-card"
+          style={{
+            textAlign: "center",
+            maxWidth: "600px",
+            margin: "100px auto",
+          }}
+        >
+          <div className="error-message" style={{ padding: "20px" }}>
+            <Title level={4} style={{ color: "#ff4d4f" }}>
+              Unable to load cart
+            </Title>
+            <Text>{error}</Text>
+            <Button
+              type="primary"
+              onClick={refreshCart}
+              style={{ marginTop: "20px" }}
+            >
+              Try Again
+            </Button>
+          </div>
+        </Card>
+      );
+    }
+
+    if (!cartItems || cartItems.length === 0) {
+      return (
+        <div
+          className="empty-cart"
+          style={{ textAlign: "center", padding: "50px 0" }}
+        >
+          <Empty
+            image={Empty.PRESENTED_IMAGE_SIMPLE}
+            description={
+              <span style={{ fontSize: "18px", color: "#666" }}>
+                Your cart is empty
+              </span>
+            }
+          >
+            <Button type="primary" size="large" href="/">
+              Continue Shopping
+            </Button>
+          </Empty>
+        </div>
+      );
+    }
+
+    // Get the total amount from the API response
+    const cartTotal = cartData?.totalAmount || 0;
+
+    return (
+      <div
+        className="cart-content"
+        style={{ display: "flex", flexDirection: "column", gap: "20px" }}
+      >
+        <Title level={2}>
+          <ShoppingCartOutlined style={{ marginRight: "10px" }} />
+          Shopping Cart ({cartItems.length} items)
+        </Title>
+
+        <Divider />
+
+        <div
+          className="cart-layout"
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            gap: "20px",
+            flexWrap: "wrap",
+          }}
+        >
+          <div className="cart-items" style={{ flex: "3", minWidth: "300px" }}>
+            <Card className="items-card" bodyStyle={{ padding: "0" }}>
+              <List
+                itemLayout="horizontal"
+                dataSource={cartItems}
+                renderItem={(item) => (
+                  <List.Item
+                    key={item._id}
+                    actions={[
+                      <Button
+                        type="text"
+                        danger
+                        icon={<DeleteOutlined />}
+                        onClick={() => removeCartItem(item._id)}
+                        disabled={updating}
+                        style={{
+                          fontSize: "16px",
+                          height: "32px",
+                          width: "32px",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      />,
+                    ]}
+                    style={{
+                      padding: "15px 20px",
+                      borderBottom: "1px solid #f0f0f0",
+                    }}
+                  >
+                    <List.Item.Meta
+                      avatar={
+                        <Avatar
+                          src={item.furniture?.imageUrl}
+                          shape="square"
+                          size={80}
+                          alt={item.furniture?.name}
+                          style={{
+                            border: "1px solid #eee",
+                            borderRadius: "4px",
+                          }}
+                        />
+                      }
+                      title={
+                        <Text strong style={{ fontSize: "16px" }}>
+                          {item.furniture?.name || "Product"}
+                        </Text>
+                      }
+                      description={
+                        <div style={{ marginTop: "8px" }}>
+                          {item.woodType ? (
+                            <Text type="secondary">
+                              Wood type: {item.woodType}
+                            </Text>
+                          ) : (
+                            <Text type="secondary">Standard wood</Text>
+                          )}
+                          <br />
+                          <Text type="secondary">
+                            Unit price: $
+                            {(item.price / item.quantity).toFixed(2)}
+                          </Text>
+                        </div>
+                      }
+                    />
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "15px",
+                      }}
+                    >
+                      <InputNumber
+                        min={1}
+                        max={item.furniture?.stock || 100}
+                        value={item.quantity}
+                        onChange={(value) => updateCartItem(item._id, value)}
+                        disabled={updating}
+                        style={{ width: "70px" }}
+                      />
+                      <Text
+                        strong
+                        style={{
+                          fontSize: "16px",
+                          minWidth: "80px",
+                          textAlign: "right",
+                        }}
+                      >
+                        ${item.price.toFixed(2)}
+                      </Text>
+                    </div>
+                  </List.Item>
+                )}
+              />
+            </Card>
+          </div>
+
+          <div
+            className="cart-summary"
+            style={{ flex: "1", minWidth: "250px" }}
+          >
+            <Card
+              title="Order Summary"
+              style={{ position: "sticky", top: "80px" }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  marginBottom: "10px",
+                }}
+              >
+                <Text>Subtotal:</Text>
+                <Text strong>${cartTotal.toFixed(2)}</Text>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  marginBottom: "10px",
+                }}
+              >
+                <Text>Shipping:</Text>
+                <Text>Free</Text>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  marginBottom: "10px",
+                }}
+              >
+                <Text>Tax:</Text>
+                <Text>Calculated at checkout</Text>
+              </div>
+
+              <Divider style={{ margin: "15px 0" }} />
+
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  marginBottom: "20px",
+                }}
+              >
+                <Title level={4} style={{ margin: 0 }}>
+                  Total:
+                </Title>
+                <Title level={4} style={{ margin: 0 }}>
+                  ${cartTotal.toFixed(2)}
+                </Title>
+              </div>
+
+              <Button
+                type="primary"
+                size="large"
+                block
+                style={{ height: "46px", fontSize: "16px" }}
+              >
+                Proceed to Checkout <RightOutlined />
+              </Button>
+
+              <Button type="link" block href="/" style={{ marginTop: "10px" }}>
+                Continue Shopping
+              </Button>
+            </Card>
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   return (
-    <>
-      <h1>Cart ({totalUniqueItems})</h1>
-      <ul>
-        {items.map((item) => (
-          <li key={item.id}>
-            {item.quantity} x {item.name} &mdash;
-            <button onClick={() => updateItemQuantity(item.id, item.quantity - 1)}>-</button>
-            <button onClick={() => updateItemQuantity(item.id, item.quantity + 1)}>+</button>
-            <button onClick={() => removeItem(item.id)}>&times;</button>
-          </li>
-        ))}
-      </ul>
-    </>
+    <div className="site-container">
+      <EcommerceNavbar />
+      <div
+        className="cart-container"
+        style={{
+          padding: "20px",
+          maxWidth: "1200px",
+          margin: "20px auto",
+          backgroundColor: "#f9f9f9",
+          minHeight: "calc(100vh - 200px)",
+          borderRadius: "8px",
+        }}
+      >
+        {renderContent()}
+      </div>
+    </div>
   );
 };
 

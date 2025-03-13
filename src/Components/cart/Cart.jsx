@@ -19,6 +19,7 @@ import {
   RightOutlined,
 } from "@ant-design/icons";
 import EcommerceNavbar from "../EcommerceNavbar";
+import {loadStripe} from '@stripe/stripe-js'
 
 const { Title, Text } = Typography;
 
@@ -46,6 +47,8 @@ export const addToCart = async (furnitureId, quantity, woodTypeId) => {
   }
 };
 
+
+
 // Create a custom hook to fetch and manage cart data
 export const useCartData = () => {
   const [cartData, setCartData] = useState(null);
@@ -53,6 +56,9 @@ export const useCartData = () => {
   const [cartCount, setCartCount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+
+
+
 
   const fetchCart = async () => {
     setIsLoading(true);
@@ -101,6 +107,52 @@ export const useCartData = () => {
 const Cart = () => {
   const { cartData, cartItems, isLoading, error, refreshCart } = useCartData();
   const [updating, setUpdating] = useState(false);
+
+  console.log(cartItems);
+  console.log(cartData);
+
+  // Move makePayment function inside the component so it can access cartItems
+  const makePayment = async () => {
+    try {
+      // Show loading message
+      message.loading("Preparing checkout...", 0);
+      
+      const stripe = await loadStripe("pk_test_51PGYes09azGpyfrWuQuV4NzNm3fRGp7IxuO3lPeBis6uztinsHhEkBWh8LA6L0oip2r9SF0VDVpdDkEAAIXll9S000KWevjqfD");
+
+      const body = {
+        products: cartItems,
+      };
+      
+      // Send request to backend to create checkout session
+      const response = await axios.post(
+        "http://localhost:3000/api/checkout/create-session",
+        body,
+        getAuthHeader()
+      );
+      
+      message.destroy(); // Hide loading message
+      
+      // Check if response contains sessionId
+      const sessionId = response.data.id;
+      if (!sessionId) {
+        throw new Error("Failed to create checkout session");
+      }
+      
+      // Redirect to Stripe checkout
+      const result = await stripe.redirectToCheckout({
+        sessionId: sessionId
+      });
+      
+      if (result.error) {
+        throw new Error(result.error.message);
+      }
+      
+    } catch (error) {
+      message.destroy();
+      console.error("Checkout error:", error);
+      message.error("Something went wrong with checkout. Please try again.");
+    }
+  };
 
   // Function to update cart item quantity via API - Updated with correct endpoint
   const updateCartItem = async (itemId, newQuantity) => {
@@ -386,6 +438,7 @@ const Cart = () => {
                 size="large"
                 block
                 style={{ height: "46px", fontSize: "16px" }}
+                onClick={makePayment}
               >
                 Proceed to Checkout <RightOutlined />
               </Button>

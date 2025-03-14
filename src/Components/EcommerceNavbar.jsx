@@ -172,16 +172,14 @@ const EcommerceNavbar = () => {
               <a href="/categories/outdoor-patio">Outdoor & Patio</a>
             </Menu.Item>
           </SubMenu>
-          <Menu.Item key="deals">
-            <a href="/deals">Deals</a>
-          </Menu.Item>
+   
           <Menu.Item key="new-arrivals">
             <a href="/new-arrivals">New Arrivals</a>
           </Menu.Item>
           <Menu.Item key="contact-us">
-            <a href="/contact-us">Contact Us</a>
+            <a href="/contact">Contact Us</a>
           </Menu.Item>
-          <Menu.Item key="orders" icon={<ShoppingOutlined />}>
+          <Menu.Item key="orders" >
             <a href="/orders">My Orders</a>
           </Menu.Item>
         </Menu>
@@ -293,7 +291,7 @@ const EcommerceNavbar = () => {
             <a href="/new-arrivals">New Arrivals</a>
           </Menu.Item>
           <Menu.Item key="contact-us">
-            <a href="/contact-us">Contact Us</a>
+            <a href="/contact">Contact Us</a>
           </Menu.Item>
           <Menu.Item key="orders">
             <a href="/orders">My Orders</a>

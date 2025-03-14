@@ -10,7 +10,8 @@ import {
   FiShoppingCart,
   FiTag,
   FiUsers,
-  FiShoppingBag, // Add this import at the top with other icons
+  FiShoppingBag,
+  FiLogOut, // Add logout icon
 } from "react-icons/fi";
 import { motion } from "framer-motion";
 
@@ -29,14 +30,14 @@ const Sidebar = () => {
   return (
     <motion.nav
       layout
-      className="sticky top-0 h-screen shrink-0 border-r border-slate-300 bg-white p-2"
+      className="sticky top-0 h-screen shrink-0 border-r border-slate-300 bg-white p-2 flex flex-col"
       style={{
         width: open ? "225px" : "fit-content",
       }}
     >
       <TitleSection open={open} />
 
-      <div className="space-y-1">
+      <div className="space-y-1 flex-grow">
         <Option
           Icon={FiHome}
           title="Dashboard"
@@ -98,6 +99,18 @@ const Sidebar = () => {
           setSelected={setSelected}
           open={open}
           path="/dashboard/users"
+        />
+      </div>
+      
+      {/* Logout button at bottom */}
+      <div className="mb-12 mt-auto border-t border-slate-300 pt-2">
+        <Option
+          Icon={FiLogOut}
+          title="Logout"
+          selected={selected}
+          setSelected={setSelected}
+          open={open}
+          path="/logout"
         />
       </div>
 

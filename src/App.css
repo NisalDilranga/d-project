@@ -1,0 +1,20 @@
+/* Prevent horizontal scrolling */
+html,
+body,
+#root {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+/* Fix container width issues */
+.container {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Ensure rows don't overflow */
+.ant-row {
+  margin-right: 0 !important;
+  margin-left: 0 !important;
+}

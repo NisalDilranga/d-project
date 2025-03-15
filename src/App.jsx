@@ -13,6 +13,7 @@ import { SideNavBar } from "./Components/admin-dashboard/SideNavBar";
 import ProductDetails from "./pages/ProductDetails";
 import OrderHistory from "./Components/orders/OrderHistory";
 import Contact from "./Pages/Contact";
+import NewArrivals from "./pages/NewArrivals";
 
 import {
   BrowserRouter as Router,
@@ -53,6 +54,7 @@ function App() {
             <Route path="/signup" element={<SignUpPage />} />
             <Route path="/home" element={<Home />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/new-arrivals" element={<NewArrivals />} />
 
             {/* Protected Routes */}
             {/* <Route

@@ -53,11 +53,11 @@ const ProductGrid = ({ title, categoryFilter }) => {
             <Col
               xs={12}
               sm={8}
-              md={6}
+              md={5}
               lg={6}
               xl={4}
               key={product._id}
-              style={{ display: "flex" }} /* Make columns flex containers */
+              style={{ display: "flex" , padding:"10px" }} /* Make columns flex containers */
             >
               <div style={{ width: "100%" }}>
                 <ProductCard product={product} />

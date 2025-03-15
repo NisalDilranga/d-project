@@ -160,7 +160,7 @@ const Cart = () => {
         }
       }
 
-     // Clear the cart after successful order creation - Fix the parameter ordering
+      // Clear the cart after successful order creation - Fix the parameter ordering
       await axios.delete(
         "http://localhost:3000/api/cart/clear",
         getAuthHeader() // Configuration object should be the second parameter for axios.delete
@@ -174,6 +174,8 @@ const Cart = () => {
 
       const body = {
         products: cartItems,
+        success_url: `${window.location.origin}/orders`,
+        cancel_url: `${window.location.origin}/cart`,
       };
 
       // Send request to backend to create checkout session

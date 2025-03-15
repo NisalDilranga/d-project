@@ -96,10 +96,7 @@ const LoginPage = () => {
           </Form.Item>
         </Form>
         <div className="flex justify-between text-sm">
-          <Button
-            type="link"
-            onClick={() => message.info("Forgot password clicked!")}
-          >
+          <Button type="link" onClick={() => navigate("/forgot-password")}>
             Forgot Password?
           </Button>
           <Button type="link" onClick={() => navigate("/signup")}>

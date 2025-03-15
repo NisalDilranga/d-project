@@ -8,6 +8,9 @@ import OfficeStudy from "./Components/categories/OfficeStudy";
 import OutdoorPatio from "./Components/categories/OutdoorPatio";
 import LoginPage from "./Components/LoginPage";
 import SignUpPage from "./Components/SignUpPage";
+import ForgotPassword from "./Components/ForgotPassword";
+import ResetPassword from "./Components/ResetPassword";
+import ResetPasswordRedirect from "./Components/ResetPasswordRedirect";
 import Home from "./templates/Home";
 import { SideNavBar } from "./Components/admin-dashboard/SideNavBar";
 import ProductDetails from "./pages/ProductDetails";
@@ -52,6 +55,13 @@ function App() {
             {/* Public Routes */}
             <Route path="/" element={<LoginPage />} />
             <Route path="/signup" element={<SignUpPage />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password/:token" element={<ResetPassword />} />
+            {/* Add a route that matches the API URL pattern and redirects to the React route */}
+            <Route
+              path="/api/auth/reset-password/:token"
+              element={<ResetPasswordRedirect />}
+            />
             <Route path="/home" element={<Home />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/new-arrivals" element={<NewArrivals />} />

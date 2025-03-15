@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   Layout,
   Menu,
@@ -29,17 +29,34 @@ import { useCartData } from "./cart/Cart"; // Import our custom hook
 const { Header } = Layout;
 const { SubMenu } = Menu;
 
+// Create a simple event system for component communication
+export const NavbarEvents = {
+  refreshCounts: "REFRESH_COUNTS",
+  listeners: new Set(),
+
+  emit() {
+    this.listeners.forEach((listener) => listener());
+  },
+
+  subscribe(listener) {
+    this.listeners.add(listener);
+    return () => this.listeners.delete(listener);
+  },
+};
+
 const EcommerceNavbar = () => {
   const [drawerVisible, setDrawerVisible] = React.useState(false);
   const [profileModalVisible, setProfileModalVisible] = useState(false);
   const [updateForm] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [userData, setUserData] = useState(null);
+  const [favoritesCount, setFavoritesCount] = useState(0);
+  const [favoritesLoading, setFavoritesLoading] = useState(false);
 
   const navigate = useNavigate();
 
   // Use our custom hook to get cart count
-  const { cartCount, isLoading } = useCartData();
+  const { cartCount, isLoading, refreshCart } = useCartData();
 
   // Check if the user is logged in
   const isLoggedIn = !!Cookies.get("accessToken"); // Or use localStorage.getItem("accessToken")
@@ -141,6 +158,90 @@ const EcommerceNavbar = () => {
     }
   };
 
+  // Memoize the fetch functions to prevent unnecessary recreation
+  const fetchFavoritesCount = useCallback(async () => {
+    if (!isLoggedIn) {
+      setFavoritesCount(0);
+      return;
+    }
+
+    setFavoritesLoading(true);
+    try {
+      const token = Cookies.get("accessToken");
+      const response = await axios.get(
+        `http://localhost:3000/api/furniture/favorites`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      // Log the full response for debugging
+      console.log("Favorites API response:", response.data);
+
+      // Handle different response formats
+      let count = 0;
+      if (Array.isArray(response.data)) {
+        // If it's an array, use the length
+        count = response.data.length;
+      } else if (response.data && Array.isArray(response.data.favorites)) {
+        // If it has a 'favorites' property that's an array, use its length
+        count = response.data.favorites.length;
+      } else if (response.data && typeof response.data === "object") {
+        // If it's an object, try to count keys (fallback)
+        count = Object.keys(response.data).length;
+      }
+
+      console.log("Calculated favorites count:", count);
+      setFavoritesCount(count);
+    } catch (error) {
+      console.error("Error fetching favorites:", error);
+      setFavoritesCount(0);
+    } finally {
+      setFavoritesLoading(false);
+    }
+  }, [isLoggedIn]);
+
+  // Function to manually refresh both counts
+  const refreshCounts = useCallback(() => {
+    console.log("Refreshing navbar counts");
+    fetchFavoritesCount();
+    refreshCart(); // Now explicitly call refreshCart too when manual refresh is triggered
+  }, [fetchFavoritesCount, refreshCart]);
+
+  // Load favorites count when component mounts or login state changes
+  useEffect(() => {
+    console.log("Navbar mounted or login state changed, fetching counts...");
+    fetchFavoritesCount();
+  }, [isLoggedIn, fetchFavoritesCount]);
+
+  // Set up event subscription in a separate effect to avoid dependency issues
+  useEffect(() => {
+    console.log("Setting up NavbarEvents subscription");
+    const unsubscribe = NavbarEvents.subscribe(() => {
+      console.log("NavbarEvents triggered, refreshing counts...");
+      fetchFavoritesCount();
+      refreshCart && refreshCart();
+    });
+
+    return () => {
+      console.log("Cleaning up NavbarEvents subscription");
+      unsubscribe();
+    };
+  }, [fetchFavoritesCount, refreshCart]);
+
+  // Function to navigate to wishlist and reload favorites
+  const handleWishlistClick = (e) => {
+    if (!isLoggedIn) {
+      e.preventDefault();
+      message.warning("Please login to view your wishlist");
+      navigate("/login");
+    } else {
+      navigate("/wishlist");
+    }
+  };
+
   return (
     <Header className="bg-white shadow-md sticky top-0 z-50">
       <div className="container mx-auto flex justify-between items-center h-full">
@@ -205,11 +306,21 @@ const EcommerceNavbar = () => {
 
         {/* User Actions */}
         <div className="flex items-center space-x-4">
-          {/* Wishlist */}
-          <Badge count={2} offset={[-4, 8]}>
-            <a href="/wishlist" className="text-gray-600 hover:text-blue-600">
+          {/* Wishlist - Shows real count from API with loading state handling */}
+          <Badge
+            count={favoritesLoading ? "..." : favoritesCount}
+            offset={[-4, 8]}
+            showZero={false}
+            style={{
+              backgroundColor: favoritesLoading ? "#8c8c8c" : "#ff4d4f",
+            }}
+          >
+            <span
+              onClick={handleWishlistClick}
+              className="text-gray-600 hover:text-red-500 cursor-pointer"
+            >
               <HeartOutlined className="text-2xl" />
-            </a>
+            </span>
           </Badge>
 
           {/* Cart - Shows real count from API with loading state handling */}

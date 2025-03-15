@@ -42,8 +42,6 @@ const formatDate = (dateString) => {
     year: "numeric",
     month: "long",
     day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
   };
   return new Date(dateString).toLocaleDateString(undefined, options);
 };
@@ -55,6 +53,12 @@ const getStatusTag = (status) => {
       return (
         <Tag icon={<ClockCircleOutlined />} color="orange">
           Pending
+        </Tag>
+      );
+    case "accepted":
+      return (
+        <Tag icon={<CheckCircleOutlined />} color="green">
+          Accepted
         </Tag>
       );
     case "processing":
@@ -162,9 +166,9 @@ const OrderHistory = () => {
         </head>
         <body>
           <div class="company-info">
-            <h2>Dwood Furniture</h2>
+            <h2>Wood Crafts</h2>
             <p>Email: contact@dwoodfurniture.com</p>
-            <p>Address: 123 Furniture Lane, Wood City, WD 12345</p>
+            <p>Address: 123 Kurunegala, Galagedara</p>
           </div>
           
           <div class="invoice-header">
@@ -189,37 +193,37 @@ const OrderHistory = () => {
             </thead>
             <tbody>
               ${order.items
-                .map(
-                  (item) => `
-                <tr>
-                  <td>${item.furniture.name} ${
+                .map((item) => {
+                  const itemPrice =
+                    item.furniture.basePrice *
+                    (item.woodType?.priceMultiplier || 1);
+                  return `
+                      <tr>
+                        <td>${item.furniture.name} ${
                     item.woodType ? `(${item.woodType.name})` : ""
                   }</td>
-                  <td>$${item.price.toFixed(2)}</td>
-                  <td>${item.quantity}</td>
-                  <td>$${(item.price * item.quantity).toFixed(2)}</td>
-                </tr>
-              `
-                )
+                        <td>Rs${itemPrice.toFixed(2)}</td>
+                        <td>${item.quantity}</td>
+                        <td>Rs${(itemPrice * item.quantity).toFixed(2)}</td>
+                      </tr>
+                    `;
+                })
                 .join("")}
             </tbody>
           </table>
           
           <div class="order-total">
-            <p>Total Amount: $${order.items
-              .reduce((sum, item) => sum + item.price * item.quantity, 0)
+            <p>Total Amount: Rs${order.items
+              .reduce((sum, item) => {
+                const itemPrice =
+                  item.furniture.basePrice *
+                  (item.woodType?.priceMultiplier || 1);
+                return sum + itemPrice * item.quantity;
+              }, 0)
               .toFixed(2)}</p>
           </div>
 
-          ${
-            order.description
-              ? `
-          <div class="order-notes">
-            <h3>Order Notes:</h3>
-            <p>${order.description}</p>
-          </div>`
-              : ""
-          }
+          
           
           <div style="text-align: center;">
             <button class="print-btn" onclick="window.print(); return false;">Print Invoice</button>
@@ -268,7 +272,12 @@ const OrderHistory = () => {
         title: "Price",
         dataIndex: "price",
         key: "price",
-        render: (price) => <Text>${price.toFixed(2)}</Text>,
+        render: (_, record) => {
+          const calculatedPrice =
+            record.furniture.basePrice *
+            (record.woodType?.priceMultiplier || 1);
+          return <Text>Rs{calculatedPrice.toFixed(2)}</Text>;
+        },
       },
       {
         title: "Quantity",
@@ -278,9 +287,16 @@ const OrderHistory = () => {
       {
         title: "Total",
         key: "total",
-        render: (_, record) => (
-          <Text strong>${(record.price * record.quantity).toFixed(2)}</Text>
-        ),
+        render: (_, record) => {
+          const calculatedPrice =
+            record.furniture.basePrice *
+            (record.woodType?.priceMultiplier || 1);
+          return (
+            <Text strong>
+              Rs{(calculatedPrice * record.quantity).toFixed(2)}
+            </Text>
+          );
+        },
       },
     ];
 
@@ -414,16 +430,24 @@ const OrderHistory = () => {
                   <Col xs={24} sm={12}>
                     <Text type="secondary">Ordered on: </Text>
                     <Text strong>{formatDate(order.createdAt)}</Text>
+                    {order.deliveryDate && (
+                      <div style={{ marginTop: 8 }}>
+                        <Text type="secondary">Delivery date: </Text>
+                        <Text strong>{formatDate(order.deliveryDate)}</Text>
+                      </div>
+                    )}
                   </Col>
                   <Col xs={24} sm={12} style={{ textAlign: "right" }}>
                     <Text type="secondary">Total: </Text>
                     <Text strong style={{ fontSize: "18px" }}>
-                      $
+                      Rs
                       {order.items
-                        .reduce(
-                          (sum, item) => sum + item.price * item.quantity,
-                          0
-                        )
+                        .reduce((sum, item) => {
+                          const itemPrice =
+                            item.furniture.basePrice *
+                            (item.woodType?.priceMultiplier || 1);
+                          return sum + itemPrice * item.quantity;
+                        }, 0)
                         .toFixed(2)}
                     </Text>
                   </Col>

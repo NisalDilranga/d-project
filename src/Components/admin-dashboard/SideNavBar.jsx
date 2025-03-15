@@ -75,14 +75,14 @@ const Sidebar = () => {
           open={open}
           path="/dashboard/orders"
         />
-        <Option
+        {/* <Option
           Icon={FiDollarSign}
           title="Sales"
           selected={selected}
           setSelected={setSelected}
           open={open}
           path="/dashboard/sales"
-        />
+        /> */}
         <Option
           Icon={FiPieChart}
           title="Analytics"
@@ -91,14 +91,14 @@ const Sidebar = () => {
           open={open}
           path="/dashboard/analytics"
         />
-        <Option
+        {/* <Option
           Icon={FiBarChart}
           title="Reports"
           selected={selected}
           setSelected={setSelected}
           open={open}
           path="/dashboard/stats"
-        />
+        /> */}
         <Option
           Icon={FiMonitor}
           title="View Site"
@@ -188,8 +188,8 @@ const TitleSection = ({ open }) => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.125 }}
             >
-              <span className="block text-xs font-semibold">TomIsLoading</span>
-              <span className="block text-xs text-slate-500">Pro Plan</span>
+              <span className="block text-xs font-semibold">WoodCraft</span>
+              <span className="block text-xs text-slate-500">Admin DashBoard</span>
             </motion.div>
           )}
         </div>

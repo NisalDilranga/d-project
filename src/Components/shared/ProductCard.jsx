@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useCart } from "react-use-cart";
 import {
   Card,
@@ -17,8 +17,12 @@ import {
   HeartFilled,
   WalletOutlined,
   CheckCircleOutlined,
+  LoadingOutlined,
 } from "@ant-design/icons";
 import { addToCart } from "../cart/Cart";
+import axios from "axios";
+import Cookies from "js-cookie";
+import { NavbarEvents } from "../EcommerceNavbar";
 
 const { Text } = Typography;
 
@@ -32,9 +36,52 @@ const ProductCard = ({ product }) => {
   const [error, setError] = useState(null);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   const [showWoodTypeModal, setShowWoodTypeModal] = useState(false);
+  const [isFavoriteLoading, setIsFavoriteLoading] = useState(false);
 
   // Extract wood types from the product data
   const woodTypes = product.woodTypes || [];
+
+  // Check if user is logged in
+  const isLoggedIn = !!Cookies.get("accessToken");
+
+  // Check if this product is in user's favorites when component loads
+  useEffect(() => {
+    const checkFavoriteStatus = async () => {
+      if (!isLoggedIn) return;
+
+      try {
+        const token = Cookies.get("accessToken");
+        const response = await axios.get(
+          `http://localhost:3000/api/furniture/favorites`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        console.log("API response for favorites check:", response.data);
+
+        // Handle different response formats for favorites
+        let favorites = [];
+        if (Array.isArray(response.data)) {
+          favorites = response.data.map((item) => item._id);
+        } else if (response.data && Array.isArray(response.data.favorites)) {
+          favorites = response.data.favorites;
+        }
+
+        // Check if this product is in favorites
+        const isFav = favorites.some((id) => id === product._id);
+        console.log(
+          `Product ${product.name} (${product._id}) favorite status:`,
+          isFav
+        );
+        setIsFavorite(isFav);
+      } catch (error) {
+        console.error("Error checking favorite status:", error);
+      }
+    };
+
+    checkFavoriteStatus();
+  }, [product._id, isLoggedIn]);
 
   const handleAddToCartClick = (e) => {
     // Stop propagation to prevent navigation when clicking the button
@@ -76,6 +123,9 @@ const ProductCard = ({ product }) => {
       // Success message
       message.success(`${product.name} added to cart`);
 
+      // Trigger navbar counts refresh
+      NavbarEvents.emit();
+
       // Reset states
       setShowWoodTypeModal(false);
       setIsAddingToCart(false);
@@ -89,19 +139,66 @@ const ProductCard = ({ product }) => {
     }
   };
 
-  const toggleFavorite = (e) => {
+  const toggleFavorite = async (e) => {
     // Stop propagation to prevent navigation when clicking the button
     e.stopPropagation();
 
-    setIsFavorite(!isFavorite);
-    message.success(
-      isFavorite
-        ? `${product.name} removed from favorites`
-        : `${product.name} added to favorites`
-    );
+    // Check if user is logged in
+    if (!isLoggedIn) {
+      message.warning("Please login to add favorites");
+      navigate("/login");
+      return;
+    }
 
-    // Here you would typically interact with an API or local storage
-    // to persist favorites across sessions
+    setIsFavoriteLoading(true);
+
+    try {
+      const token = Cookies.get("accessToken");
+
+      if (isFavorite) {
+        // Remove from favorites
+        console.log(`Removing product ${product._id} from favorites`);
+        await axios.delete(
+          `http://localhost:3000/api/furniture/${product._id}/favorite`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        setIsFavorite(false);
+        message.success(`${product.name} removed from favorites`);
+
+        // Trigger navbar counts refresh with fallback
+        console.log("Emitting NavbarEvents for favorite toggle");
+        NavbarEvents.emit();
+        setTimeout(() => NavbarEvents.emit(), 300);
+      } else {
+        // Add to favorites
+        console.log(`Adding product ${product._id} to favorites`);
+        await axios.post(
+          `http://localhost:3000/api/furniture/${product._id}/favorite`,
+          {},
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        setIsFavorite(true);
+        message.success(`${product.name} added to favorites`);
+
+        // Trigger navbar counts refresh with fallback
+        console.log("Emitting NavbarEvents for favorite toggle");
+        NavbarEvents.emit();
+        setTimeout(() => NavbarEvents.emit(), 300);
+      }
+    } catch (error) {
+      console.error("Error toggling favorite:", error);
+      message.error(
+        error.response?.data?.error || "Failed to update favorites"
+      );
+    } finally {
+      setIsFavoriteLoading(false);
+    }
   };
 
   // Navigate to product details page when card is clicked
@@ -274,7 +371,7 @@ const ProductCard = ({ product }) => {
           <Text
             style={{ fontWeight: "bold", color: "#1890ff", fontSize: "16px" }}
           >
-            ${product.basePrice?.toFixed(2)}
+            Rs{product.basePrice?.toFixed(2)}
           </Text>
           {product.stock && (
             <Tag
@@ -309,7 +406,15 @@ const ProductCard = ({ product }) => {
           <Button
             type={isFavorite ? "danger" : "default"}
             size="small"
-            icon={isFavorite ? <HeartFilled /> : <HeartOutlined />}
+            icon={
+              isFavoriteLoading ? (
+                <LoadingOutlined />
+              ) : isFavorite ? (
+                <HeartFilled />
+              ) : (
+                <HeartOutlined />
+              )
+            }
             onClick={toggleFavorite}
             style={{
               minWidth: "40px",
@@ -323,6 +428,7 @@ const ProductCard = ({ product }) => {
                 : {}),
             }}
             className="favorite-button"
+            disabled={isFavoriteLoading}
           />
         </div>
       </Card>

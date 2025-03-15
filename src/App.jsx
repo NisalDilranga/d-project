@@ -17,6 +17,7 @@ import ProductDetails from "./pages/ProductDetails";
 import OrderHistory from "./Components/orders/OrderHistory";
 import Contact from "./Pages/Contact";
 import NewArrivals from "./pages/NewArrivals";
+import WishlistPage from "./pages/WishlistPage";
 
 import {
   BrowserRouter as Router,
@@ -65,6 +66,7 @@ function App() {
             <Route path="/home" element={<Home />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/new-arrivals" element={<NewArrivals />} />
+            <Route path="/wishlist" element={<WishlistPage />} />
 
             {/* Protected Routes */}
             {/* <Route

@@ -32,9 +32,15 @@ const OrdersManagement = () => {
     try {
       setLoading(true);
       let url = "http://localhost:3000/api/orders";
-      if (status) {
+
+      if (status === "shipped") {
+        url = "http://localhost:3000/api/orders/status/shipped";
+      } else if (status === "delivered") {
+        url = "http://localhost:3000/api/orders/status/delivered";
+      } else if (status) {
         url = `http://localhost:3000/api/orders/status/${status}`;
       }
+
       const response = await axios.get(url, getAuthHeader());
       setOrders(response.data);
     } catch (error) {
@@ -118,7 +124,7 @@ const OrdersManagement = () => {
       title: "Total",
       dataIndex: "totalAmount",
       key: "totalAmount",
-      render: (amount) => <span>${amount?.toFixed(2)}</span>,
+      render: (amount) => <span>Rs {amount?.toFixed(2)}</span>,
     },
     {
       title: "Status",
@@ -129,6 +135,8 @@ const OrdersManagement = () => {
           pending: "gold",
           accepted: "green",
           rejected: "red",
+          shipped: "blue",
+          delivered: "purple",
         };
         return (
           <Tag color={colors[status]} key={status}>
@@ -149,16 +157,14 @@ const OrdersManagement = () => {
               setDetailsModalVisible(true);
             }}
           />
-          {record.status === "pending" && (
-            <Button
-              onClick={() => {
-                setSelectedOrder(record);
-                setStatusModalVisible(true);
-              }}
-            >
-              Update Status
-            </Button>
-          )}
+          <Button
+            onClick={() => {
+              setSelectedOrder(record);
+              setStatusModalVisible(true);
+            }}
+          >
+            Update Status
+          </Button>
           <Popconfirm
             title="Delete order"
             description="Are you sure?"
@@ -210,6 +216,28 @@ const OrdersManagement = () => {
         />
       ),
     },
+    {
+      key: "shipped",
+      label: "Shipped",
+      children: (
+        <Table
+          columns={columns}
+          dataSource={orders.filter((o) => o.status === "shipped")}
+          rowKey="_id"
+        />
+      ),
+    },
+    {
+      key: "delivered",
+      label: "Delivered",
+      children: (
+        <Table
+          columns={columns}
+          dataSource={orders.filter((o) => o.status === "delivered")}
+          rowKey="_id"
+        />
+      ),
+    },
   ];
 
   return (
@@ -246,7 +274,7 @@ const OrdersManagement = () => {
               <div>
                 <h3 className="font-semibold">Order Information</h3>
                 <p>Status: {selectedOrder.status.toUpperCase()}</p>
-                <p>Total: ${selectedOrder.totalAmount?.toFixed(2)}</p>
+                <p>Total: Rs {selectedOrder.totalAmount?.toFixed(2)}</p>
               </div>
             </div>
             <div>
@@ -271,7 +299,7 @@ const OrdersManagement = () => {
                   {
                     title: "Price",
                     dataIndex: "price",
-                    render: (price) => `$${price?.toFixed(2)}`,
+                    render: (price) => `Rs ${price?.toFixed(2)}`,
                   },
                 ]}
                 pagination={false}
@@ -307,17 +335,17 @@ const OrdersManagement = () => {
               form.setFieldsValue({ deliveryDate: undefined });
             }
           }}
+          initialValues={{
+            status: selectedOrder?.status || "pending",
+          }}
         >
-          <Form.Item
-            name="status"
-            label="Status"
-            rules={[{ required: true }]}
-            initialValue="pending"
-          >
+          <Form.Item name="status" label="Status" rules={[{ required: true }]}>
             <select className="w-full border rounded p-2">
               <option value="pending">Pending</option>
-              <option value="accepted">Accept</option>
-              <option value="rejected">Reject</option>
+              <option value="accepted">Accepted</option>
+              <option value="rejected">Rejected</option>
+              <option value="shipped">Shipped</option>
+              <option value="delivered">Delivered</option>
             </select>
           </Form.Item>
 

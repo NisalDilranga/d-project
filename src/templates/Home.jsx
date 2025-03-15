@@ -10,6 +10,7 @@ import SliderOne from "../Components/SliderOne";
 import EcommerceNavbar from "../Components/EcommerceNavbar";
 import FeaturedProducts from "../Components/FeaturedProducts";
 import Tabs from "../Components/Tabs";
+import Footer from "../Components/shared/Footer";
 // Remove unused imports
 // import Slider1 from '../Components/SliderOne'
 // import Slikslider from '../Components/Slikslider'
@@ -105,7 +106,7 @@ const Home = () => {
       <TextParallaxContentExample />
 
       <AnimatedSection animation={fadeIn}>
-        <AppFooter />
+        <Footer />
       </AnimatedSection>
     </div>
   );

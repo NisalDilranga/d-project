@@ -27,7 +27,15 @@ const DashboardStats = () => {
   const [stats, setStats] = useState({
     users: { total: 0, loading: true },
     products: { total: 0, categoriesCount: 0, loading: true },
-    orders: { total: 0, pending: 0, accepted: 0, rejected: 0, loading: true },
+    orders: {
+      total: 0,
+      pending: 0,
+      accepted: 0,
+      rejected: 0,
+      shipped: 0,
+      delivered: 0,
+      loading: true,
+    },
     revenue: { total: 0, loading: true },
   });
 
@@ -115,10 +123,18 @@ const DashboardStats = () => {
           const rejected = orders.filter(
             (order) => order.status === "rejected"
           ).length;
+          const shipped = orders.filter(
+            (order) => order.status === "shipped"
+          ).length;
+          const delivered = orders.filter(
+            (order) => order.status === "delivered"
+          ).length;
 
-          // Calculate total revenue from accepted orders
+          // Calculate total revenue from accepted, shipped and delivered orders
           const totalRevenue = orders
-            .filter((order) => order.status === "accepted")
+            .filter((order) =>
+              ["accepted", "shipped", "delivered"].includes(order.status)
+            )
             .reduce((sum, order) => sum + (order.totalAmount || 0), 0);
 
           return {
@@ -126,6 +142,8 @@ const DashboardStats = () => {
             pending,
             accepted,
             rejected,
+            shipped,
+            delivered,
             revenue: totalRevenue,
           };
         });
@@ -145,6 +163,8 @@ const DashboardStats = () => {
           pending: orders.pending,
           accepted: orders.accepted,
           rejected: orders.rejected,
+          shipped: orders.shipped,
+          delivered: orders.delivered,
           loading: false,
         },
         revenue: { total: orders.revenue, loading: false },
@@ -233,8 +253,11 @@ const DashboardStats = () => {
               <span className="text-yellow-500 mr-2">
                 {stats.orders.pending} pending
               </span>
-              <span className="text-green-500">
-                {stats.orders.accepted} completed
+              <span className="text-green-500 mr-2">
+                {stats.orders.accepted} accepted
+              </span>
+              <span className="text-blue-500 mr-2">
+                {stats.orders.shipped} shipped
               </span>
             </div>
           </Card>
@@ -245,7 +268,7 @@ const DashboardStats = () => {
               title="Total Revenue"
               value={stats.revenue.total}
               precision={2}
-              prefix={<DollarOutlined />}
+              prefix={<span>Rs </span>}
               loading={stats.revenue.loading}
               suffix={
                 <span className="text-green-500 text-xs flex items-center ml-2">
@@ -299,6 +322,42 @@ const DashboardStats = () => {
                       <div className="mt-2">Accepted</div>
                       <div className="text-lg font-semibold">
                         {stats.orders.accepted}
+                      </div>
+                    </div>
+                  </Col>
+                  <Col span={8}>
+                    <div className="text-center">
+                      <Progress
+                        type="circle"
+                        percent={
+                          Math.round(
+                            (stats.orders.shipped / stats.orders.total) * 100
+                          ) || 0
+                        }
+                        strokeColor="#1890ff"
+                      />
+                      <div className="mt-2">Shipped</div>
+                      <div className="text-lg font-semibold">
+                        {stats.orders.shipped}
+                      </div>
+                    </div>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={8}>
+                    <div className="text-center">
+                      <Progress
+                        type="circle"
+                        percent={
+                          Math.round(
+                            (stats.orders.delivered / stats.orders.total) * 100
+                          ) || 0
+                        }
+                        strokeColor="#722ed1"
+                      />
+                      <div className="mt-2">Delivered</div>
+                      <div className="text-lg font-semibold">
+                        {stats.orders.delivered}
                       </div>
                     </div>
                   </Col>

@@ -181,11 +181,11 @@ const ProductDetails = () => {
 
             <div className="mb-4">
               <Title level={4} style={{ color: "#1890ff", margin: 0 }}>
-                ${calculatedPrice}
+                Rs{calculatedPrice}
               </Title>
               {selectedWoodType && (
                 <Text type="secondary">
-                  Base price: ${product.basePrice.toFixed(2)} ×{" "}
+                  Base price: Rs{product.basePrice.toFixed(2)} ×{" "}
                   {selectedWoodType.priceMultiplier} (
                   {selectedWoodType.woodType.name})
                 </Text>

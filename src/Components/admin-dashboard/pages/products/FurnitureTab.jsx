@@ -172,7 +172,7 @@ const FurnitureTab = () => {
       dataIndex: "basePrice",
       key: "basePrice",
       render: (price) => (
-        <span className="font-medium">${price.toFixed(2)}</span>
+        <span className="font-medium">Rs {price.toFixed(2)}</span>
       ),
     },
     {
@@ -292,7 +292,7 @@ const FurnitureTab = () => {
             label="Base Price"
             rules={[{ required: true }]}
           >
-            <Input type="number" prefix="$" />
+            <Input type="number" prefix="Rs " />
           </Form.Item>
 
           <Form.Item

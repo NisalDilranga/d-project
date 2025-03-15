@@ -118,8 +118,8 @@ const Analytics = () => {
         "Nov",
         "Dec",
       ];
-      const existingOrders = orders.filter(
-        (order) => order.status === "accepted"
+      const existingOrders = orders.filter((order) =>
+        ["accepted", "shipped", "delivered"].includes(order.status)
       );
 
       for (let i = 0; i < 12; i++) {
@@ -161,14 +161,14 @@ const Analytics = () => {
         });
 
         const revenue = matchingOrders.reduce((sum, order) => {
-          if (order.status === "accepted") {
+          if (["accepted", "shipped", "delivered"].includes(order.status)) {
             return sum + (order.totalAmount || 0);
           }
           return sum;
         }, 0);
 
-        const acceptedOrders = matchingOrders.filter(
-          (order) => order.status === "accepted"
+        const acceptedOrders = matchingOrders.filter((order) =>
+          ["accepted", "shipped", "delivered"].includes(order.status)
         ).length;
 
         salesData.push({
@@ -211,7 +211,10 @@ const Analytics = () => {
     const productSales = {};
 
     orders.forEach((order) => {
-      if (order.status === "accepted" && order.items) {
+      if (
+        ["accepted", "shipped", "delivered"].includes(order.status) &&
+        order.items
+      ) {
         order.items.forEach((item) => {
           if (item.furniture && item.furniture._id) {
             const productId = item.furniture._id;
@@ -387,9 +390,6 @@ const Analytics = () => {
           <Button icon={<ReloadOutlined />} onClick={handleRefresh}>
             Refresh
           </Button>
-          <Button icon={<DownloadOutlined />} type="primary">
-            Export Report
-          </Button>
         </Space>
       </div>
 
@@ -403,7 +403,7 @@ const Analytics = () => {
                 .reduce((sum, item) => sum + item.value, 0)}
               precision={2}
               valueStyle={{ color: "#3f8600" }}
-              prefix="$"
+              prefix="Rs "
               suffix={<ArrowUpOutlined />}
             />
           </Card>
@@ -422,7 +422,7 @@ const Analytics = () => {
               }
               precision={2}
               valueStyle={{ color: "#1890ff" }}
-              prefix="$"
+              prefix="Rs "
             />
           </Card>
         </Col>

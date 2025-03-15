@@ -18,7 +18,7 @@ import {
   ShoppingCartOutlined,
   RightOutlined,
 } from "@ant-design/icons";
-import EcommerceNavbar from "../EcommerceNavbar";
+import EcommerceNavbar, { NavbarEvents } from "../EcommerceNavbar";
 import { loadStripe } from "@stripe/stripe-js";
 
 const { Title, Text } = Typography;
@@ -27,25 +27,6 @@ const { Title, Text } = Typography;
 const getAuthHeader = () => ({
   headers: { Authorization: `Bearer ${Cookies.get("accessToken")}` },
 });
-
-// Function to add a product to cart that can be imported by other components
-export const addToCart = async (furnitureId, quantity, woodTypeId) => {
-  try {
-    const response = await axios.post(
-      "http://localhost:3000/api/cart/add",
-      {
-        furnitureId,
-        quantity: quantity || 1,
-        woodTypeId,
-      },
-      getAuthHeader()
-    );
-    return response.data;
-  } catch (error) {
-    console.error("Error adding item to cart:", error);
-    throw error;
-  }
-};
 
 // Create a custom hook to fetch and manage cart data
 export const useCartData = () => {
@@ -87,6 +68,16 @@ export const useCartData = () => {
 
   useEffect(() => {
     fetchCart();
+
+    // Subscribe to refresh events
+    const unsubscribe = NavbarEvents?.subscribe
+      ? NavbarEvents.subscribe(fetchCart)
+      : null;
+
+    return () => {
+      // Cleanup subscription when component unmounts
+      if (unsubscribe) unsubscribe();
+    };
   }, []);
 
   return {
@@ -97,6 +88,29 @@ export const useCartData = () => {
     error,
     refreshCart: fetchCart,
   };
+};
+
+// Function to add a product to cart that can be imported by other components
+export const addToCart = async (furnitureId, quantity, woodTypeId) => {
+  try {
+    const response = await axios.post(
+      "http://localhost:3000/api/cart/add",
+      {
+        furnitureId,
+        quantity: quantity || 1,
+        woodTypeId,
+      },
+      getAuthHeader()
+    );
+
+    // Emit event to refresh navbar counts
+    if (NavbarEvents?.emit) NavbarEvents.emit();
+
+    return response.data;
+  } catch (error) {
+    console.error("Error adding item to cart:", error);
+    throw error;
+  }
 };
 
 const Cart = () => {
@@ -117,7 +131,7 @@ const Cart = () => {
         furniture: item.furniture?._id || item.furniture,
         woodType: item.woodType?._id || item.woodType,
         quantity: item.quantity,
-        price: item.price,
+        price: item.furniture.basePrice,
       }));
 
       // Create order payload
@@ -220,6 +234,7 @@ const Cart = () => {
       );
       message.success("Cart updated successfully");
       refreshCart(); // Refresh cart data after update
+      NavbarEvents.emit(); // Emit event after updating cart item
     } catch (error) {
       console.error("Error updating cart item:", error);
       message.error("Failed to update cart. Please try again.");
@@ -238,6 +253,7 @@ const Cart = () => {
       );
       message.success("Item removed from cart");
       refreshCart(); // Refresh cart data after removal
+      NavbarEvents.emit(); // Emit event after removing cart item
     } catch (error) {
       console.error("Error removing cart item:", error);
       message.error("Failed to remove item. Please try again.");
@@ -393,7 +409,7 @@ const Cart = () => {
                           )}
                           <br />
                           <Text type="secondary">
-                            Unit price: $
+                            Unit price: Rs
                             {(item.price / item.quantity).toFixed(2)}
                           </Text>
                         </div>
@@ -422,7 +438,7 @@ const Cart = () => {
                           textAlign: "right",
                         }}
                       >
-                        ${item.price.toFixed(2)}
+                        Rs{item.price.toFixed(2)}
                       </Text>
                     </div>
                   </List.Item>
@@ -447,7 +463,7 @@ const Cart = () => {
                 }}
               >
                 <Text>Subtotal:</Text>
-                <Text strong>${cartTotal.toFixed(2)}</Text>
+                <Text strong>Rs{cartTotal.toFixed(2)}</Text>
               </div>
               <div
                 style={{
@@ -483,7 +499,7 @@ const Cart = () => {
                   Total:
                 </Title>
                 <Title level={4} style={{ margin: 0 }}>
-                  ${cartTotal.toFixed(2)}
+                  Rs{cartTotal.toFixed(2)}
                 </Title>
               </div>
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import {
@@ -16,12 +16,14 @@ import {
   Row,
   Col,
   Badge,
+  Space,
 } from "antd";
 import {
   ShoppingOutlined,
   ClockCircleOutlined,
   CheckCircleOutlined,
   InboxOutlined,
+  PrinterOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import EcommerceNavbar from "../EcommerceNavbar";
@@ -91,6 +93,7 @@ const OrderHistory = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const printRef = useRef(null);
 
   useEffect(() => {
     fetchOrders();
@@ -112,6 +115,122 @@ const OrderHistory = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const generateInvoice = (order) => {
+    // Create a new window for the invoice
+    const invoiceWindow = window.open("", "_blank");
+
+    // Format the invoice HTML
+    const invoiceHTML = `
+      <html>
+        <head>
+          <title>Invoice - Order #${order._id.substring(
+            order._id.length - 8
+          )}</title>
+          <style>
+            body { font-family: Arial, sans-serif; margin: 20px; }
+            .company-info { text-align: center; margin-bottom: 20px; }
+            .invoice-header { text-align: center; margin-bottom: 30px; }
+            .order-info { margin-bottom: 20px; }
+            .order-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+            .order-table th, .order-table td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+            .order-table th { background-color: #f2f2f2; }
+            .order-total { text-align: right; margin-top: 20px; font-weight: bold; }
+            .print-btn { 
+              background-color: #1890ff; 
+              color: white; 
+              padding: 10px 20px; 
+              border: none; 
+              border-radius: 4px; 
+              cursor: pointer; 
+              font-size: 14px;
+              margin-top: 20px;
+              transition: background-color 0.3s;
+            }
+            .print-btn:hover { 
+              background-color: #096dd9; 
+            }
+            .company-logo {
+              max-width: 150px;
+              margin-bottom: 10px;
+            }
+            @media print {
+              button { display: none; }
+            }
+          </style>
+        </head>
+        <body>
+          <div class="company-info">
+            <h2>Dwood Furniture</h2>
+            <p>Email: contact@dwoodfurniture.com</p>
+            <p>Address: 123 Furniture Lane, Wood City, WD 12345</p>
+          </div>
+          
+          <div class="invoice-header">
+            <h1>INVOICE</h1>
+            <p>Order #${order._id.substring(order._id.length - 8)}</p>
+          </div>
+          
+          <div class="order-info">
+            <p><strong>Date:</strong> ${formatDate(order.createdAt)}</p>
+            <p><strong>Status:</strong> ${order.status}</p>
+          </div>
+          
+          <h2>Order Items</h2>
+          <table class="order-table">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${order.items
+                .map(
+                  (item) => `
+                <tr>
+                  <td>${item.furniture.name} ${
+                    item.woodType ? `(${item.woodType.name})` : ""
+                  }</td>
+                  <td>$${item.price.toFixed(2)}</td>
+                  <td>${item.quantity}</td>
+                  <td>$${(item.price * item.quantity).toFixed(2)}</td>
+                </tr>
+              `
+                )
+                .join("")}
+            </tbody>
+          </table>
+          
+          <div class="order-total">
+            <p>Total Amount: $${order.items
+              .reduce((sum, item) => sum + item.price * item.quantity, 0)
+              .toFixed(2)}</p>
+          </div>
+
+          ${
+            order.description
+              ? `
+          <div class="order-notes">
+            <h3>Order Notes:</h3>
+            <p>${order.description}</p>
+          </div>`
+              : ""
+          }
+          
+          <div style="text-align: center;">
+            <button class="print-btn" onclick="window.print(); return false;">Print Invoice</button>
+          </div>
+        </body>
+      </html>
+    `;
+
+    invoiceWindow.document.open();
+    invoiceWindow.document.write(invoiceHTML);
+    invoiceWindow.document.close();
   };
 
   const renderOrderItems = (items) => {
@@ -267,7 +386,27 @@ const OrderHistory = () => {
                         Order #{order._id.substring(order._id.length - 8)}
                       </Text>
                     </Col>
-                    <Col>{getStatusTag(order.status)}</Col>
+                    <Col>
+                      <Space>
+                        {getStatusTag(order.status)}
+                        <Button
+                          type="primary"
+                          icon={<PrinterOutlined />}
+                          style={{
+                            background: "#389e0d",
+                            borderColor: "#389e0d",
+                            boxShadow: "0 2px 0 rgba(0, 0, 0, 0.045)",
+                            transition: "all 0.3s",
+                          }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            generateInvoice(order);
+                          }}
+                        >
+                          Print Invoice
+                        </Button>
+                      </Space>
+                    </Col>
                   </Row>
                 }
               >

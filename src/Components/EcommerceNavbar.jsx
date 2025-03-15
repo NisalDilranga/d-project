@@ -10,6 +10,7 @@ import {
   Modal,
   Form,
   message,
+  Tooltip,
 } from "antd";
 import { MdOutlineLogout } from "react-icons/md";
 import {
@@ -172,14 +173,14 @@ const EcommerceNavbar = () => {
               <a href="/categories/outdoor-patio">Outdoor & Patio</a>
             </Menu.Item>
           </SubMenu>
-   
+
           <Menu.Item key="new-arrivals">
             <a href="/new-arrivals">New Arrivals</a>
           </Menu.Item>
           <Menu.Item key="contact-us">
             <a href="/contact">Contact Us</a>
           </Menu.Item>
-          <Menu.Item key="orders" >
+          <Menu.Item key="orders">
             <a href="/orders">My Orders</a>
           </Menu.Item>
         </Menu>
@@ -224,25 +225,26 @@ const EcommerceNavbar = () => {
 
           {/* User Profile or Login/Signup */}
           {isLoggedIn ? (
-            <Space>
-              {/* User Profile - Changed to open modal instead of navigating */}
-              <Button
-                type="text"
-                icon={<UserOutlined />}
-                onClick={showProfileModal}
-              >
-                Profile
-              </Button>
-              {/* Logout Button */}
-              <Button
-                type="primary"
-                danger
-                icon={<MdOutlineLogout />}
-                onClick={handleLogout}
-              >
-                Logout
-              </Button>
-            </Space>
+            <div className="flex items-center space-x-4">
+              {/* User Profile - Simple icon like cart/wishlist */}
+              <Tooltip title="Profile">
+                <span className="text-gray-600 hover:text-blue-600 cursor-pointer">
+                  <UserOutlined
+                    className="text-2xl"
+                    onClick={showProfileModal}
+                  />
+                </span>
+              </Tooltip>
+              {/* Logout Button - Simple icon like cart/wishlist */}
+              <Tooltip title="Logout">
+                <span className="text-gray-600 hover:text-red-600 cursor-pointer">
+                  <MdOutlineLogout
+                    className="text-2xl"
+                    onClick={handleLogout}
+                  />
+                </span>
+              </Tooltip>
+            </div>
           ) : (
             <Space>
               {/* Sign In */}

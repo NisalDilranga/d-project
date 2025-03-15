@@ -25,7 +25,9 @@ import Cookies from "js-cookie"; // For checking authentication
 import DashboardLayout from "./layouts/DashboardLayout";
 import UsersManagement from "./Components/admin-dashboard/pages/UsersManagement";
 import ProductsManagement from "./Components/admin-dashboard/pages/ProductsManagement";
-import OrdersManagement from "./Components/admin-dashboard/pages/OrdersManagement"; // Add this import at the top
+import OrdersManagement from "./Components/admin-dashboard/pages/OrdersManagement";
+import DashboardStats from "./Components/admin-dashboard/pages/DashboardStats"; // Import the new dashboard component
+import Analytics from "./Components/admin-dashboard/pages/Analytics"; // Import the new Analytics component
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -129,7 +131,10 @@ function App() {
                 </ProtectedRoute>
               }
             >
-              <Route index element={<UsersManagement />} />
+              <Route index element={<DashboardStats />} />
+              <Route path="stats" element={<DashboardStats />} />
+              <Route path="analytics" element={<Analytics />} />{" "}
+              {/* Add new Analytics route */}
               <Route path="users" element={<UsersManagement />} />
               <Route path="products" element={<ProductsManagement />} />
               <Route path="sales" element={<Cart />} />

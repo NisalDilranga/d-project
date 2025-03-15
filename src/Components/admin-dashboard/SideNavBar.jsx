@@ -11,14 +11,18 @@ import {
   FiTag,
   FiUsers,
   FiShoppingBag,
-  FiLogOut, // Add logout icon
+  FiLogOut,
+  FiGrid,
+  FiPieChart, // Add new icon for Analytics
 } from "react-icons/fi";
 import { motion } from "framer-motion";
 
 export const SideNavBar = () => {
   return (
-    <div className="flex bg-indigo-50">
+    <div className="flex bg-indigo-50 h-full">
       <Sidebar />
+      {/* Add an empty div that takes the same width as the sidebar to prevent content shift */}
+      <div className="invisible shrink-0" style={{ width: "225px" }}></div>
     </div>
   );
 };
@@ -30,16 +34,17 @@ const Sidebar = () => {
   return (
     <motion.nav
       layout
-      className="sticky top-0 h-screen shrink-0 border-r border-slate-300 bg-white p-2 flex flex-col"
+      className="fixed left-0 top-0 bottom-0 overflow-y-auto border-r border-slate-300 bg-white p-2 flex flex-col z-10"
       style={{
-        width: open ? "225px" : "fit-content",
+        width: open ? "225px" : "60px", // Adjusted for collapsed state
+        height: "100vh",
       }}
     >
       <TitleSection open={open} />
 
-      <div className="space-y-1 flex-grow">
+      <div className="space-y-1 flex-grow overflow-y-auto">
         <Option
-          Icon={FiHome}
+          Icon={FiGrid}
           title="Dashboard"
           selected={selected}
           setSelected={setSelected}
@@ -47,20 +52,12 @@ const Sidebar = () => {
           path="/dashboard"
         />
         <Option
-          Icon={FiDollarSign}
-          title="Sales"
+          Icon={FiUsers}
+          title="Users"
           selected={selected}
           setSelected={setSelected}
           open={open}
-          path="/dashboard/sales"
-        />
-        <Option
-          Icon={FiMonitor}
-          title="View Site"
-          selected={selected}
-          setSelected={setSelected}
-          open={open}
-          path=""
+          path="/dashboard/users"
         />
         <Option
           Icon={FiShoppingCart}
@@ -79,38 +76,48 @@ const Sidebar = () => {
           path="/dashboard/orders"
         />
         <Option
-          Icon={FiTag}
-          title="Tags"
+          Icon={FiDollarSign}
+          title="Sales"
           selected={selected}
           setSelected={setSelected}
           open={open}
+          path="/dashboard/sales"
         />
         <Option
-          Icon={FiBarChart}
+          Icon={FiPieChart}
           title="Analytics"
           selected={selected}
           setSelected={setSelected}
           open={open}
+          path="/dashboard/analytics"
         />
         <Option
-          Icon={FiUsers}
-          title="Users Management"
+          Icon={FiBarChart}
+          title="Reports"
           selected={selected}
           setSelected={setSelected}
           open={open}
-          path="/dashboard/users"
+          path="/dashboard/stats"
+        />
+        <Option
+          Icon={FiMonitor}
+          title="View Site"
+          selected={selected}
+          setSelected={setSelected}
+          open={open}
+          path="/home"
         />
       </div>
-      
+
       {/* Logout button at bottom */}
-      <div className="mb-12 mt-auto border-t border-slate-300 pt-2">
+      <div className="mt-auto border-t border-slate-300 pt-2">
         <Option
           Icon={FiLogOut}
           title="Logout"
           selected={selected}
           setSelected={setSelected}
           open={open}
-          path="/logout"
+          path="/"
         />
       </div>
 
@@ -225,7 +232,7 @@ const ToggleClose = ({ open, setOpen }) => {
     <motion.button
       layout
       onClick={() => setOpen((pv) => !pv)}
-      className="absolute bottom-0 left-0 right-0 border-t border-slate-300 transition-colors hover:bg-slate-100"
+      className="border-t border-slate-300 transition-colors hover:bg-slate-100 mt-2"
     >
       <div className="flex items-center p-2">
         <motion.div

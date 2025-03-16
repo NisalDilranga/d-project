@@ -8,8 +8,15 @@ import {
   message,
   Space,
   Popconfirm,
+  Row,
+  Col,
 } from "antd";
-import { EditOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
+import {
+  EditOutlined,
+  DeleteOutlined,
+  PlusOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
 import axios from "axios";
 import Cookies from "js-cookie";
 
@@ -19,6 +26,7 @@ const CategoriesTab = () => {
   const [editingCategory, setEditingCategory] = useState(null);
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
+  const [searchText, setSearchText] = useState("");
 
   const getAuthHeader = () => ({
     headers: { Authorization: `Bearer ${Cookies.get("accessToken")}` },
@@ -115,25 +123,43 @@ const CategoriesTab = () => {
     },
   ];
 
+  // Filter categories based on search text
+  const filteredCategories = categories.filter(
+    (category) =>
+      category.name.toLowerCase().includes(searchText.toLowerCase()) ||
+      category.description.toLowerCase().includes(searchText.toLowerCase())
+  );
+
   return (
     <>
-      <div className="mb-4">
-        <Button
-          type="primary"
-          icon={<PlusOutlined />}
-          onClick={() => {
-            setEditingCategory(null);
-            form.resetFields();
-            setIsModalVisible(true);
-          }}
-        >
-          Add Category
-        </Button>
-      </div>
+      <Row gutter={16} className="mb-4">
+        <Col xs={24} md={18}>
+          <Input.Search
+            placeholder="Search categories by name or description"
+            allowClear
+            enterButton={<SearchOutlined />}
+            onSearch={(value) => setSearchText(value)}
+            onChange={(e) => setSearchText(e.target.value)}
+          />
+        </Col>
+        <Col xs={24} md={6} className="flex justify-end">
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={() => {
+              setEditingCategory(null);
+              form.resetFields();
+              setIsModalVisible(true);
+            }}
+          >
+            Add Category
+          </Button>
+        </Col>
+      </Row>
 
       <Table
         columns={columns}
-        dataSource={categories}
+        dataSource={filteredCategories}
         rowKey="_id"
         loading={loading}
       />

@@ -9,8 +9,15 @@ import {
   message,
   Space,
   Popconfirm,
+  Row,
+  Col,
 } from "antd";
-import { EditOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
+import {
+  EditOutlined,
+  DeleteOutlined,
+  PlusOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
 import axios from "axios";
 import Cookies from "js-cookie";
 
@@ -22,6 +29,11 @@ const FurnitureTab = () => {
   const [editingFurniture, setEditingFurniture] = useState(null);
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
+
+  // Search and filter states
+  const [searchText, setSearchText] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [stockFilter, setStockFilter] = useState("all");
 
   const getAuthHeader = () => ({
     headers: { Authorization: `Bearer ${Cookies.get("accessToken")}` },
@@ -235,25 +247,86 @@ const FurnitureTab = () => {
     setIsModalVisible(true);
   };
 
+  // Filtered furniture based on search and filters
+  const filteredFurniture = furniture.filter((item) => {
+    const nameMatch = item.name
+      .toLowerCase()
+      .includes(searchText.toLowerCase());
+    const categoryMatch =
+      categoryFilter === "all" ||
+      (item.category && item.category._id === categoryFilter);
+    const stockMatch =
+      stockFilter === "all" ||
+      (stockFilter === "inStock" && item.stock > 0) ||
+      (stockFilter === "outOfStock" && item.stock === 0) ||
+      (stockFilter === "lowStock" && item.stock > 0 && item.stock <= 5);
+
+    return nameMatch && categoryMatch && stockMatch;
+  });
+
   return (
     <>
-      <div className="mb-4">
-        <Button
-          type="primary"
-          icon={<PlusOutlined />}
-          onClick={() => {
-            setEditingFurniture(null);
-            form.resetFields();
-            setIsModalVisible(true);
-          }}
-        >
-          Add Furniture
-        </Button>
+      <div className="mb-6">
+        <Row gutter={[16, 16]} className="mb-4">
+          <Col xs={24} md={8}>
+            <Input.Search
+              placeholder="Search furniture by name"
+              allowClear
+              enterButton={<SearchOutlined />}
+              onSearch={(value) => setSearchText(value)}
+              onChange={(e) => setSearchText(e.target.value)}
+            />
+          </Col>
+          <Col xs={24} md={8}>
+            <Select
+              placeholder="Filter by category"
+              style={{ width: "100%" }}
+              value={categoryFilter}
+              onChange={(value) => setCategoryFilter(value)}
+            >
+              <Select.Option value="all">All Categories</Select.Option>
+              {categories.map((category) => (
+                <Select.Option key={category._id} value={category._id}>
+                  {category.name}
+                </Select.Option>
+              ))}
+            </Select>
+          </Col>
+          <Col xs={24} md={8}>
+            <Select
+              placeholder="Filter by stock"
+              style={{ width: "100%" }}
+              value={stockFilter}
+              onChange={(value) => setStockFilter(value)}
+            >
+              <Select.Option value="all">All Stock Levels</Select.Option>
+              <Select.Option value="inStock">In Stock</Select.Option>
+              <Select.Option value="outOfStock">Out of Stock</Select.Option>
+              <Select.Option value="lowStock">Low Stock (≤ 5)</Select.Option>
+            </Select>
+          </Col>
+        </Row>
+
+        <Row className="mt-4">
+          <Col span={24} className="flex justify-end">
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={() => {
+                setEditingFurniture(null);
+                form.resetFields();
+                setIsModalVisible(true);
+              }}
+            >
+              Add Furniture
+            </Button>
+          </Col>
+        </Row>
       </div>
 
       <Table
         columns={columns}
-        dataSource={furniture}
+        dataSource={filteredFurniture}
         rowKey="_id"
         loading={loading}
       />

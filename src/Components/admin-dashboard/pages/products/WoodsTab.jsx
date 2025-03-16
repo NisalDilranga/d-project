@@ -9,8 +9,16 @@ import {
   message,
   Space,
   Popconfirm,
+  Select,
+  Row,
+  Col,
 } from "antd";
-import { EditOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
+import {
+  EditOutlined,
+  DeleteOutlined,
+  PlusOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
 import axios from "axios";
 import Cookies from "js-cookie";
 
@@ -20,6 +28,8 @@ const WoodsTab = () => {
   const [editingWood, setEditingWood] = useState(null);
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
+  const [searchText, setSearchText] = useState("");
+  const [availabilityFilter, setAvailabilityFilter] = useState("all");
 
   const getAuthHeader = () => ({
     headers: { Authorization: `Bearer ${Cookies.get("accessToken")}` },
@@ -122,25 +132,62 @@ const WoodsTab = () => {
     },
   ];
 
+  // Filtered woods based on search and filter
+  const filteredWoods = woods.filter((wood) => {
+    const nameMatch = wood.name
+      .toLowerCase()
+      .includes(searchText.toLowerCase());
+    const availabilityMatch =
+      availabilityFilter === "all" ||
+      (availabilityFilter === "available" && wood.availability) ||
+      (availabilityFilter === "unavailable" && !wood.availability);
+
+    return nameMatch && availabilityMatch;
+  });
+
   return (
     <>
-      <div className="mb-4">
-        <Button
-          type="primary"
-          icon={<PlusOutlined />}
-          onClick={() => {
-            setEditingWood(null);
-            form.resetFields();
-            setIsModalVisible(true);
-          }}
-        >
-          Add Wood Type
-        </Button>
-      </div>
+      <Row gutter={16} className="mb-4">
+        <Col xs={24} sm={12} md={8} lg={8}>
+          <Input.Search
+            placeholder="Search by wood name"
+            allowClear
+            enterButton={<SearchOutlined />}
+            onSearch={(value) => setSearchText(value)}
+            onChange={(e) => setSearchText(e.target.value)}
+            style={{ width: "100%" }}
+          />
+        </Col>
+        <Col xs={24} sm={12} md={8} lg={8}>
+          <Select
+            placeholder="Filter by availability"
+            style={{ width: "100%" }}
+            value={availabilityFilter}
+            onChange={(value) => setAvailabilityFilter(value)}
+          >
+            <Select.Option value="all">All</Select.Option>
+            <Select.Option value="available">Available</Select.Option>
+            <Select.Option value="unavailable">Not Available</Select.Option>
+          </Select>
+        </Col>
+        <Col xs={24} sm={24} md={8} lg={8} className="flex justify-end">
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={() => {
+              setEditingWood(null);
+              form.resetFields();
+              setIsModalVisible(true);
+            }}
+          >
+            Add Wood Type
+          </Button>
+        </Col>
+      </Row>
 
       <Table
         columns={columns}
-        dataSource={woods}
+        dataSource={filteredWoods}
         rowKey="_id"
         loading={loading}
       />

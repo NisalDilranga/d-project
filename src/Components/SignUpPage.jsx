@@ -15,7 +15,7 @@ const SignUpPage = () => {
           name: values.name,
           email: values.email,
           password: values.password,
-          role: values.role,
+          role: values.role || "user", // Default to "user" if role is not selected
         }
       );
 
@@ -91,7 +91,7 @@ const SignUpPage = () => {
             <Input.Password placeholder="Enter your password" />
           </Form.Item>
 
-          <Form.Item
+          {/* <Form.Item
             label="Role"
             name="role"
             rules={[
@@ -105,7 +105,7 @@ const SignUpPage = () => {
               <Option value="admin">Admin</Option>
               <Option value="user">User</Option>
             </Select>
-          </Form.Item>
+          </Form.Item> */}
 
           <Form.Item>
             <Button type="primary" htmlType="submit" block className="mb-4">

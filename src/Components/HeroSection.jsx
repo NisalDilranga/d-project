@@ -1,8 +1,11 @@
 import React from 'react';
 import { Button} from 'antd';
 import aboutus_img from '../../src/assets/aboutus-img.jpg';
+import { useNavigate } from "react-router-dom";
 
 const HeroSection= () => {
+
+  const navigate = useNavigate();
   return (
 
     <section className='bg-[#666666] py-24 bg-opacity-20'>
@@ -13,7 +16,7 @@ const HeroSection= () => {
              <h1 className='text-[48px] font-bold'>welcome to store</h1>
              <p className='break-words text-[18px] font-[500] pt-7'>Our furniture is intelligently designed to give both comfort and functionality, while we also go to great lengths to ensure that we source only the highest quality raw materials and use the latest technologies to manufacture each individual piece.</p>
              <div className="pt-10">
-               <Button type="primary" className='px-10 py-5 rounded-3xl'  >Read More</Button>
+               <Button type="primary" className='px-10 py-5 rounded-3xl' onClick={() => navigate("/new-arrivals")} >Discover More</Button>
              </div>
            </div>
          </div>

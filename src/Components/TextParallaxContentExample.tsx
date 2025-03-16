@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { FiArrowUpRight } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 
 export const TextParallaxContentExample = () => {
   return (
@@ -17,14 +18,14 @@ export const TextParallaxContentExample = () => {
         subheading="Quality"
         heading="Never compromise."
       >
-        <ExampleContent />
+        <ExampleContent1 />
       </TextParallaxContent>
       <TextParallaxContent
         imgUrl="imgs/TC/p_3.jpg"
         subheading="Modern"
         heading="Dress for the best."
       >
-        <ExampleContent />
+        <ExampleContent2 />
       </TextParallaxContent>
     </div>
   );
@@ -109,25 +110,76 @@ const OverlayCopy = ({ subheading, heading }) => {
   );
 };
 
-const ExampleContent = () => (
-  <div className="mx-auto grid max-w-5xl grid-cols-1 gap-8 px-4 pb-24 pt-12 md:grid-cols-12">
-    <h2 className="col-span-1 text-3xl font-bold md:col-span-4">
-      Additional content explaining the above card here
-    </h2>
-    <div className="col-span-1 md:col-span-8">
-      <p className="mb-4 text-xl text-neutral-600 md:text-2xl">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi,
-        blanditiis soluta eius quam modi aliquam quaerat odit deleniti minima
-        maiores voluptate est ut saepe accusantium maxime doloremque nulla
-        consectetur possimus.
-      </p>
-      <p className="mb-8 text-xl text-neutral-600 md:text-2xl">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusantium
-        reiciendis blanditiis aliquam aut fugit sint.
-      </p>
-      <button className="w-full rounded bg-neutral-900 px-9 py-4 text-xl text-white transition-colors hover:bg-neutral-700 md:w-fit">
-        Learn more <FiArrowUpRight className="inline" />
-      </button>
+const ExampleContent = () => {
+  const navigate = useNavigate();
+
+  return (
+    <div className="mx-auto grid max-w-5xl grid-cols-1 gap-8 px-4 pb-24 pt-12 md:grid-cols-12">
+      <h2 className="col-span-1 text-3xl font-bold md:col-span-4">
+        Additional content explaining the above card here
+      </h2>
+      <div className="col-span-1 md:col-span-8">
+        <p className="mb-4 text-xl text-neutral-600 md:text-2xl">
+          we believe that furniture is more than just functional—it's an
+          expression of your personality and style. Whether you're looking for
+          modern, classic, or custom-made pieces, we offer a wide range of
+          high-quality furniture to transform your home or office. Explore our
+          collection and find the perfect addition to your space today!
+        </p>
+
+        <button
+          className="w-full rounded bg-neutral-900 px-9 py-4 text-xl text-white transition-colors hover:bg-neutral-700 md:w-fit"
+          onClick={() => navigate("/new-arrivals")}
+        >
+          Explore More <FiArrowUpRight className="inline" />
+        </button>
+      </div>
     </div>
-  </div>
-);
+  );
+};
+const ExampleContent2 = () => {
+  const navigate = useNavigate();
+
+  return (
+    <div className="mx-auto grid max-w-5xl grid-cols-1 gap-8 px-4 pb-24 pt-12 md:grid-cols-12">
+      <h2 className="col-span-1 text-3xl font-bold md:col-span-4">
+      Discover the Perfect Furniture for Every Space
+      </h2>
+      <div className="col-span-1 md:col-span-8">
+        <p className="mb-4 text-xl text-neutral-600 md:text-2xl">
+        From cozy sofas and elegant dining sets to stylish office desks and space-saving storage solutions, we have everything you need to enhance your interior. Our carefully curated selection ensures durability, comfort, and a touch of sophistication in every piece. Browse through our categories and bring your vision to life with furniture that blends beauty and functionality.
+        </p>
+
+        <button
+          className="w-full rounded bg-neutral-900 px-9 py-4 text-xl text-white transition-colors hover:bg-neutral-700 md:w-fit"
+          onClick={() => navigate("/new-arrivals")}
+        >
+          Explore More <FiArrowUpRight className="inline" />
+        </button>
+      </div>
+    </div>
+  );
+};
+const ExampleContent1 = () => {
+  const navigate = useNavigate();
+
+  return (
+    <div className="mx-auto grid max-w-5xl grid-cols-1 gap-8 px-4 pb-24 pt-12 md:grid-cols-12">
+      <h2 className="col-span-1 text-3xl font-bold md:col-span-4">
+      Transform Your Home with Just a Click!
+      </h2>
+      <div className="col-span-1 md:col-span-8">
+        <p className="mb-4 text-xl text-neutral-600 md:text-2xl">
+        Shopping for furniture has never been easier. With our user-friendly website, you can browse, select, and order your favorite pieces from the comfort of your home. Enjoy a seamless shopping experience with secure payment options and reliable customer support.
+        </p>
+
+        <button
+          className="w-full rounded bg-neutral-900 px-9 py-4 text-xl text-white transition-colors hover:bg-neutral-700 md:w-fit"
+          onClick={() => navigate("/new-arrivals")}
+        >
+          Explore More <FiArrowUpRight className="inline" />
+        </button>
+      </div>
+    </div>
+  );
+};

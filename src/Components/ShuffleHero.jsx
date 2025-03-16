@@ -1,7 +1,9 @@
 import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const ShuffleHero = () => {
+   const navigate = useNavigate();
   return (
     <section className="w-full px-8 py-12 pt-48 grid grid-cols-1 md:grid-cols-2 items-center gap-8 max-w-6xl mx-auto">
       <div>
@@ -14,7 +16,7 @@ const ShuffleHero = () => {
         <p className="text-base md:text-lg text-slate-700 my-4 md:my-6">
         Transform your home with our exquisite collection of handcrafted furniture. Each piece is designed to blend functionality with elegance, adding a touch of charm to your living spaces. Whether you’re looking for timeless classics or modern designs, our range has something for everyone. Start your journey toward creating a home you love—choose quality, choose style, choose us.
         </p>
-        <button className="bg-indigo-500 text-white font-medium py-2 px-4 rounded transition-all hover:bg-indigo-600 active:scale-95">
+        <button className="bg-indigo-500 text-white font-medium py-2 px-4 rounded transition-all hover:bg-indigo-600 active:scale-95" onClick={() => navigate("/new-arrivals")}>
         Discover
         </button>
       </div>
@@ -59,51 +61,51 @@ const squareData = [
   },
   {
     id: 5,
-    src: "https://images.unsplash.com/photo-1569074187119-c87815b476da?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1325&q=80",
+    src: "https://firebasestorage.googleapis.com/v0/b/images-312f9.appspot.com/o/woodsProducts%2Foffice%2Fhanging-chair-2451365_1280.jpg?alt=media&token=ec749aff-5567-4b3c-a7ce-f86cbbca7235",
   },
   {
     id: 6,
-    src: "https://images.unsplash.com/photo-1556817411-31ae72fa3ea0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80",
+    src: "https://firebasestorage.googleapis.com/v0/b/images-312f9.appspot.com/o/woodsProducts%2Foffice%2Fdesk-2376116_1280.jpg?alt=media&token=c314fb70-34a1-4c81-8821-933c658ba6d0",
   },
   {
     id: 7,
-    src: "https://images.unsplash.com/photo-1599586120429-48281b6f0ece?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80",
+    src: "https://firebasestorage.googleapis.com/v0/b/images-312f9.appspot.com/o/woodsProducts%2Foffice%2Fhanging-chair-2451365_1280.jpg?alt=media&token=ec749aff-5567-4b3c-a7ce-f86cbbca7235",
   },
   {
     id: 8,
-    src: "https://plus.unsplash.com/premium_photo-1671436824833-91c0741e89c9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80",
+    src: "https://firebasestorage.googleapis.com/v0/b/images-312f9.appspot.com/o/woodsProducts%2Foffice%2Ftable-2583879_1280.jpg?alt=media&token=8a08a6fb-359f-45d0-811d-99672e9cd7c0",
   },
   {
     id: 9,
-    src: "https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80",
+    src: "https://firebasestorage.googleapis.com/v0/b/images-312f9.appspot.com/o/woodsProducts%2Foffice%2Ftable-2587598_1280.jpg?alt=media&token=667f81e6-1f61-4522-bcf2-967213a09193",
   },
   {
     id: 10,
-    src: "https://images.unsplash.com/photo-1610768764270-790fbec18178?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
+    src: "https://firebasestorage.googleapis.com/v0/b/images-312f9.appspot.com/o/woodsProducts%2Foffice%2Fchair-1379580_1280.jpg?alt=media&token=97bb1c55-5fc5-4c4d-94bc-9e4235b258f5",
   },
   {
     id: 11,
-    src: "https://images.unsplash.com/photo-1507034589631-9433cc6bc453?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=684&q=80",
+    src: "https://firebasestorage.googleapis.com/v0/b/images-312f9.appspot.com/o/woodsProducts%2Fliving%20room%2Fpexels-catscoming-707579.jpg?alt=media&token=7701a8dc-5745-4ad3-81c6-c03d56bc1e17",
   },
   {
     id: 12,
-    src: "https://images.unsplash.com/photo-1533107862482-0e6974b06ec4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=882&q=80",
+    src: "https://firebasestorage.googleapis.com/v0/b/images-312f9.appspot.com/o/woodsProducts%2Fliving%20room%2Freal-estate-9265408_1280.jpg?alt=media&token=58a1d511-9fe6-41c7-b5fd-65a5ad5fd2f9",
   },
   {
     id: 13,
-    src: "https://images.unsplash.com/photo-1560089000-7433a4ebbd64?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
+    src: "https://firebasestorage.googleapis.com/v0/b/images-312f9.appspot.com/o/woodsProducts%2Fliving%20room%2Freal-estate-6893060_1280.jpg?alt=media&token=70be9c66-2f71-4acf-9ad3-d8447c456e67",
   },
   {
     id: 14,
-    src: "https://images.unsplash.com/photo-1517466787929-bc90951d0974?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=686&q=80",
+    src: "https://firebasestorage.googleapis.com/v0/b/images-312f9.appspot.com/o/woodsProducts%2Fliving%20room%2Fliving-room-9073734_1280.jpg?alt=media&token=3bb11fbf-c059-4d73-b802-1219924ba347",
   },
   {
     id: 15,
-    src: "https://images.unsplash.com/photo-1606244864456-8bee63fce472?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=681&q=80",
+    src: "https://firebasestorage.googleapis.com/v0/b/images-312f9.appspot.com/o/woodsProducts%2Fdecorative-8800609_1280.jpg?alt=media&token=1d3da4e9-8193-4556-a936-56c0d7e7d5b0",
   },
   {
     id: 16,
-    src: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1820&q=80",
+    src: "https://firebasestorage.googleapis.com/v0/b/images-312f9.appspot.com/o/woodsProducts%2Fpexels-heyho-6265940.jpg?alt=media&token=331c80dd-3234-4142-9cb9-3ff6f24c83b0",
   },
 ];
 const generateSquares = () => {
